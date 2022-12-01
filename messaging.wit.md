@@ -18,6 +18,7 @@ interface "wasi:messaging/types" {
     	dataschema: option<string>,
     	subject: option<string>,
     	time: option<string>,
+		extensions: option<list<tuple<string, string>>>
     }
     
     /// Channels specify where a published message should land. There are two types of channels:
@@ -56,7 +57,7 @@ interface "wasi:messaging/push" {
 /// An interface for a consumer relying on basic pull-based message delivery.
 interface "wasi:messaging/basic/pull" {
 	/// Pulls a message.
-  	receive: func() -> result<event, error>
+  	receive: func(time-to-live-in-milliseconds: u32) -> result<event, error>
 }
 
 /// An interface for a consumer relying on pull-based message delivery via streaming.
