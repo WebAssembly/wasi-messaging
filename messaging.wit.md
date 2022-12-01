@@ -9,15 +9,15 @@ interface "wasi:messaging/types" {
     /// assume the type of the data is a byte sequence. It is up to the data schema to determine what type of the data payload the event 
     /// contains.
     record event {
-    	specversion: string,
-    	ty: string,
-    	source: string,
-    	id: string,
-    	data: option<list<u8>>,
-    	datacontenttype: option<string>,
-    	dataschema: option<string>,
-    	subject: option<string>,
-    	time: option<string>,
+		specversion: string,
+		ty: string,
+		source: string,
+		id: string,
+		data: option<list<u8>>,
+		datacontenttype: option<string>,
+		dataschema: option<string>,
+		subject: option<string>,
+		time: option<string>,	
 		extensions: option<list<tuple<string, string>>>
     }
     
@@ -25,8 +25,8 @@ interface "wasi:messaging/types" {
     /// - queue: competitive consumers, and
     /// - topic: non-competitive consumers.
     variant channel {
-    	queue(string),
-    	topic(string)
+		queue(string),
+		topic(string)
     }
     
     /// An error type
