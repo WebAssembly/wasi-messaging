@@ -1,10 +1,10 @@
-# `wasi-pubsub`
+# `wasi-messaging`
 
 A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) API.
 
 ### Current Phase
 
-`wasi-pubsub` is currently in [Phase 1](https://github.com/WebAssembly/WASI/blob/42fe2a3ca159011b23099c3d10b5b1d9aff2140e/docs/Proposals.md#phase-1---feature-proposal-cg).
+`wasi-messaging` is currently in [Phase 1](https://github.com/WebAssembly/WASI/blob/42fe2a3ca159011b23099c3d10b5b1d9aff2140e/docs/Proposals.md#phase-1---feature-proposal-cg).
 
 ### Champions
 
@@ -14,7 +14,7 @@ A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) A
 
 ### Phase 4 Advancement Criteria
 
-`wasi-pubsub` should have at least two implementations (i.e., from service providers, and or cloud providers), and, at the very minimum, pass the testsuite for Windows, Linux, and MacOS.
+`wasi-messaging` should have at least two implementations (i.e., from service providers, and or cloud providers), and, at the very minimum, pass the testsuite for Windows, Linux, and MacOS.
 
 ## Table of Contents
 

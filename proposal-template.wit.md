@@ -1,32 +1,84 @@
-# [Proposal Template] API
+# `wasi-messaging` API
 
-[This document contains the actual specification. It should be written in the WIT interface definition format. You can find more documentation on the WIT syntax (coming soon!).]
-
-[Note that all comments inside of WIT code blocks will be included in the developer facing documentation for language bindings generated using this WIT file. If there is additional information that needs to be communicated to implementers of the API, then these should be captured in text directly below the code block.]
-
-[If you want to include examples of the API in use, these should be in the README and linked to from this file.]
-
-## api_type_one
+## Interfaces
 
 ```wit
-/// Short description
-///
-/// Explanation for developers using the API.
-record api-type-one {
-    property1: u64,
-    property2: string,
+/// An interface grouping all necessary types for messaging.
+interface "wasi:messaging/types" {
+    /// An event type that follows the CloudEvents specification (https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md). We
+    /// assume the type of the data is a byte sequence. It is up to the data schema to determine what type of the data payload the event 
+    /// contains.
+    record event {
+    	specversion: string,
+    	ty: string,
+    	source: string,
+    	id: string,
+    	data: option<list<u8>>,
+    	datacontenttype: option<string>,
+    	dataschema: option<string>,
+    	subject: option<string>,
+    	time: option<string>,
+    }
+    
+    /// Channels specify where a published message should land. There are two types of channels:
+    /// - queue: competitive consumers, and
+    /// - topic: non-competitive consumers.
+    variant channel {
+    	queue(string),
+    	topic(string)
+    }
+    
+    /// An error type
+    type error = string
+}
+
+/// An interface for a producer.
+interface "wasi:messaging/pub" { 
+	/// Publishes an event to a channel.
+	publish: func(c: channel, e: event) -> result<_, error>
+}
+
+/// An interface for a generic consumer.
+interface "wasi:messaging/sub" {
+	/// Subscribes to a channel.
+  	subscribe: func(c: channel) -> result<_, error>
+
+	/// Unsubscribes from a channel.
+  	unsubscribe: func(c: channel) -> result<_, error>
+}
+
+/// An interface for a consumer relying on push-based message delivery.
+interface "wasi:messaging/push" {
+	/// Creates an on-receive handler push-based message delivery.
+  	on-receive: func(e: event) -> result<_, error>
+}
+
+/// An interface for a consumer relying on basic pull-based message delivery.
+interface "wasi:messaging/basic/pull" {
+	/// Pulls a message.
+  	receive: func() -> result<event, error>
+}
+
+/// An interface for a consumer relying on pull-based message delivery via streaming.
+interface "wasi:messaging/stream/pull" {
+	/// Pulls a stream of messages.
+  	stream-receive: func() -> result<stream<event>, error> 
+}
+
+// ...
+```
+
+```wit
+// ...
+
+world pubsub {
+    import pub: "wasi:messaging/pub"
+    import sub: "wasi:messaging/sub"
+    import pull: "wasi:messaging/basic/pull"
+  
+    export handle-receive: "wasi:http/handler"
+    export handle-subscribe: "wasi:http/handler"
+    export handle-publish: "wasi:http/handler"
 }
 ```
 
-More rigorous specification details for the implementer go here, if needed.
-
-## api_function_one
-
-```wit
-/// Short description
-///
-/// Explanation for developers using the API.
-api-function-one: function() -> api-type-one
-```
-
-If needed, this would explain what a compliant implementation MUST do, such as never returning an earlier result from a later call.
