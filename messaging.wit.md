@@ -68,17 +68,38 @@ interface "wasi:messaging/stream/pull" {
 // ...
 ```
 
+## World Examples
+
 ```wit
 // ...
 
-world pubsub {
+/// Two worlds that connect "sub" together "basic/pull"/"stream/pull", as they are intrinsically linked.
+world "wasi:messaging/basic/sub-pull" {
+	import sub: "wasi:messaging/basic/sub"
+	
+	export pull: "wasi:messaging/basic/pull"
+}
+
+world "wasi:messaging/stream/sub-pull" {
+	import sub: "wasi:messaging/basic/sub"
+	
+	export stream-pull: "wasi:messaging/stream/pull"
+}
+
+/// Two typical usage examples.
+world pull-pubsub {
     import pub: "wasi:messaging/pub"
-    import sub: "wasi:messaging/sub"
-    import pull: "wasi:messaging/basic/pull"
+    import sub-pull: "wasi:messaging/basic/sub-pull" // or "wasi:messaging/stream/sub-pull"
   
     export handle-receive: "wasi:http/handler"
     export handle-subscribe: "wasi:http/handler"
     export handle-publish: "wasi:http/handler"
+}
+
+world "wasi:messaging/basic/sub-pull" {
+	import pub: "wasi:messaging/pub"
+	
+	export on-receive: "wasi:messaging/push"
 }
 ```
 
