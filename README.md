@@ -4,7 +4,7 @@ A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) A
 
 ### Current Phase
 
-`wasi-messaging` is currently in [Phase 1](https://github.com/WebAssembly/WASI/blob/42fe2a3ca159011b23099c3d10b5b1d9aff2140e/docs/Proposals.md#phase-1---feature-proposal-cg).
+`wasi-messaging` is currently in [Phase 1](https://github.com/WebAssembly/WASI/blob/main/Proposals.md#phase-1---feature-proposal-cg).
 
 ### Champions
 
