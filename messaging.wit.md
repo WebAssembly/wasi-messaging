@@ -88,7 +88,7 @@ world "wasi:messaging/stream/sub-pull" {
 }
 
 /// Two typical usage examples.
-world pull-pubsub {
+world "wasi:messaging/pull-pubsub" {
     import pub: "wasi:messaging/pub"
     import sub-pull: "wasi:messaging/basic/sub-pull" // or "wasi:messaging/stream/sub-pull"
   
@@ -97,7 +97,7 @@ world pull-pubsub {
     export handle-publish: "wasi:http/handler"
 }
 
-world "wasi:messaging/basic/sub-pull" {
+world "wasi:messaging/sub-pull" {
 	import pub: "wasi:messaging/pub"
 	
 	export on-receive: "wasi:messaging/push"
