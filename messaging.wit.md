@@ -30,15 +30,15 @@ interface "wasi:messaging/types" {
     }
     
     /// An error type
-    enum messaging-error {
-        payload-too-large,
-        queue-or-topic-not-found,
-        insufficient-permissions,
-        service-unavailable,
-        delivery-failed,
-        connection-lost,
-        unsupported-message-format,
-        unexpected-error,
+    variant messaging-error {
+        payload-too-large(string),
+        queue-or-topic-not-found(string),
+        insufficient-permissions(string),
+        service-unavailable(string),
+        delivery-failed(string),
+        connection-lost(string),
+        unsupported-message-format(string),
+        unexpected-error(string),
     }
 
 	// A subscription token that allows receives from a specific subscription
