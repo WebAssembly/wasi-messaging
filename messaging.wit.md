@@ -30,7 +30,19 @@ interface "wasi:messaging/types" {
     }
     
     /// An error type
-    type error = string
+    enum messaging-error {
+        payload-too-large,
+        queue-or-topic-not-found,
+        insufficient-permissions,
+        service-unavailable,
+        delivery-failed,
+        connection-lost,
+        unsupported-message-format,
+        unexpected-error,
+    }
+
+	// A subscription token that allows receives from a specific subscription
+	type subscription-token = string
 }
 
 /// An interface for a producer.
@@ -42,10 +54,10 @@ interface "wasi:messaging/pub" {
 /// An interface for a generic consumer.
 interface "wasi:messaging/sub" {
 	/// Subscribes to a channel.
-  	subscribe: func(c: channel) -> result<_, error>
+  	subscribe: func(c: channel) -> result<subscription-token, error>
 
 	/// Unsubscribes from a channel.
-  	unsubscribe: func(c: channel) -> result<_, error>
+  	unsubscribe: func(st: subscription-token) -> result<_, error>
 }
 
 /// An interface for a consumer relying on push-based message delivery.
@@ -56,14 +68,14 @@ interface "wasi:messaging/push" {
 
 /// An interface for a consumer relying on basic pull-based message delivery.
 interface "wasi:messaging/basic/pull" {
-	/// Pulls a message.
-  	receive: func(time-to-live-in-milliseconds: u32) -> result<event, error>
+	/// Pulls a message from a specific channel.
+  	receive: func(time-to-live-in-milliseconds: u32, st: subscription-token) -> result<event, error>
 }
 
 /// An interface for a consumer relying on pull-based message delivery via streaming.
 interface "wasi:messaging/stream/pull" {
-	/// Pulls a stream of messages.
-  	stream-receive: func() -> result<stream<event>, error> 
+	/// Pulls a stream of messages from a specific channel.
+  	stream-receive: func(st: subscription-token) -> result<stream<event>, error> 
 }
 
 // ...
