@@ -1,0 +1,8 @@
+/// An interface for a consumer relying on push-based message delivery.
+default interface handler {
+    use pkg.types.{event}
+    use err.tracing.{error}
+
+	/// Creates an on-receive handler push-based message delivery.
+  	on-receive: func(e: event) -> result<_, error>
+}

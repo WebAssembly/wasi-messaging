@@ -19,84 +19,26 @@ A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) A
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Goals [or Motivating Use Cases, or Scenarios]](#goals-or-motivating-use-cases-or-scenarios)
+- [Goals](#goals)
 - [Non-goals](#non-goals)
-- [API walk-through](#api-walk-through)
-  - [Use case 1](#use-case-1)
-  - [Use case 2](#use-case-2)
-- [Detailed design discussion](#detailed-design-discussion)
-  - [[Tricky design choice 1]](#tricky-design-choice-1)
-  - [[Tricky design choice 2]](#tricky-design-choice-2)
-- [Considered alternatives](#considered-alternatives)
-  - [[Alternative 1]](#alternative-1)
-  - [[Alternative 2]](#alternative-2)
-- [Stakeholder Interest & Feedback](#stakeholder-interest--feedback)
-- [References & acknowledgements](#references--acknowledgements)
 
 ### Introduction
 
-[The "executive summary" or "abstract". Explain in a few sentences what the goals of the project are, and a brief overview of how the solution works. This should be no more than 1-2 paragraphs.]
+The messaging interfaces aim to provide a generic and flexible way for producers and consumers to communicate through message brokers. The pub interface allows producers to publish events to a specific channel in a broker, while the sub interface allows consumers to subscribe to a channel and receive events through a push-based mechanism. The handler interface provides an on-receive function that can be used to process received events with full abstraction of the underlying broker implementation.
 
-### Goals [or Motivating Use Cases, or Scenarios]
+### Goals
 
-[What is the end-user need which this project aims to address?]
+The messaging service interfaces aim to address the need for a standard way to handle message-based communication in modern software systems. In complex software systems, different components or even different applications need to communicate with each other to exchange information and coordinate their actions. Message-based communication, where one component or application sends a message to another, has become a popular way to achieve this.
+
+However, implementing message-based communication can be challenging, as it requires dealing with the details of message brokers, such as connection management, channel setup, and message serialization. The messaging service interfaces aim to simplify this process by providing a standard way to interact with message brokers, hiding the underlying complexity from the user.
+
+This standardization can benefit various scenarios, such as microservices architectures, where each microservice can communicate with other microservices using the messaging service interfaces. Similarly, applications that need to handle event-driven or streaming data can benefit from the push-based message delivery mechanism provided by the sub and handler interfaces. Overall, the messaging service interfaces aim to make it easier to build complex and scalable software systems by providing a common foundation for message-based communication.
 
 ### Non-goals
 
-[If there are "adjacent" goals which may appear to be in scope but aren't, enumerate them here. This section may be fleshed out as your design progresses and you encounter necessary technical and other trade-offs.]
+- The messaging service interfaces do not aim to provide advanced features of message brokers, such as broker clustering, message persistence, or guaranteed message delivery. These are implementation-specific details that are not addressed by the interfaces.
+- The messaging service interfaces do not aim to provide support for every possible messaging pattern or use case. Instead, they focus on the common use cases of pub-sub and push-based message delivery. Other messaging patterns, such as request-reply or publish-confirm-subscribe, are outside the scope of the interfaces.
+- The messaging service interfaces do not aim to provide a specific implementation of a message broker. Instead, they provide a standard way to interact with any message broker that supports the interfaces.
 
-### API walk-through
-
-[Walk through of how someone would use this API.]
-
-#### [Use case 1]
-
-[Provide example code snippets and diagrams explaining how the API would be used to solve the given problem]
-
-#### [Use case 2]
-
-[etc.]
-
-### Detailed design discussion
-
-[This section should mostly refer to the .wit.md file that specifies the API. This section is for any discussion of the choices made in the API which don't make sense to document in the spec file itself.]
-
-#### [Tricky design choice #1]
-
-[Talk through the tradeoffs in coming to the specific design point you want to make.]
-
-```
-// Illustrated with example code.
-```
-
-[This may be an open question, in which case you should link to any active discussion threads.]
-
-#### [Tricky design choice 2]
-
-[etc.]
-
-### Considered alternatives
-
-[This section is not required if you already covered considered alternatives in the design discussion above.]
-
-#### [Alternative 1]
-
-[Describe an alternative which was considered, and why you decided against it.]
-
-#### [Alternative 2]
-
-[etc.]
-
-### Stakeholder Interest & Feedback
-
-TODO before entering Phase 3.
-
-[This should include a list of implementers who have expressed interest in implementing the proposal]
-
-### References & acknowledgements
-
-Many thanks for valuable feedback and advice from:
-
-- [Person 1]
-- [Person 2]
-- [etc.]
+> Note: This README needs to be expanded to cover a number of additional fields suggested in the
+[WASI Proposal template](https://github.com/WebAssembly/wasi-proposal-template).

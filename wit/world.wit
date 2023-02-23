@@ -1,0 +1,5 @@
+default world messaging {
+	import pub: pkg.pub
+	import sub: pkg.sub
+	export handler: pkg.handler
+}
