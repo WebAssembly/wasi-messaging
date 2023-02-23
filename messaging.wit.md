@@ -61,58 +61,21 @@ interface "wasi:messaging/sub" {
 }
 
 /// An interface for a consumer relying on push-based message delivery.
-interface "wasi:messaging/push" {
+interface "wasi:messaging/handler" {
 	/// Creates an on-receive handler push-based message delivery.
   	on-receive: func(e: event) -> result<_, error>
-}
-
-/// An interface for a consumer relying on basic pull-based message delivery.
-interface "wasi:messaging/basic/pull" {
-	/// Pulls a message from a specific channel.
-  	receive: func(time-to-live-in-milliseconds: u32, st: subscription-token) -> result<event, error>
-}
-
-/// An interface for a consumer relying on pull-based message delivery via streaming.
-interface "wasi:messaging/stream/pull" {
-	/// Pulls a stream of messages from a specific channel.
-  	stream-receive: func(st: subscription-token) -> result<stream<event>, error> 
 }
 
 // ...
 ```
 
-## World Examples
+## World
 
 ```wit
-// ...
-
-/// Two worlds that connect "sub" together "basic/pull"/"stream/pull", as they are intrinsically linked.
-world "wasi:messaging/basic/sub-pull" {
-	import sub: "wasi:messaging/basic/sub"
-	
-	export pull: "wasi:messaging/basic/pull"
-}
-
-world "wasi:messaging/stream/sub-pull" {
-	import sub: "wasi:messaging/basic/sub"
-	
-	export stream-pull: "wasi:messaging/stream/pull"
-}
-
-/// Two typical usage examples.
-world "wasi:messaging/pull-pubsub" {
-    import pub: "wasi:messaging/pub"
-    import sub-pull: "wasi:messaging/basic/sub-pull" // or "wasi:messaging/stream/sub-pull"
-  
-    export handle-receive: "wasi:http/handler"
-    export handle-subscribe: "wasi:http/handler"
-    export handle-publish: "wasi:http/handler"
-}
-
-world "wasi:messaging/sub-pull" {
+world "wasi:messaging/service" {
 	import pub: "wasi:messaging/pub"
-	
-	export on-receive: "wasi:messaging/push"
+	import sub: "wasi:messaging/sub"
+	export message-handler: "wasi:messaging/handler"
 }
 ```
 
