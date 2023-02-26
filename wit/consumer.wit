@@ -1,5 +1,5 @@
 /// An interface for a generic consumer.
-default interface sub {
+default interface consumer {
 	use pkg.types.{broker, channel, subscription-token, error}
 
 	/// Subscribes to a channel in a broker.
