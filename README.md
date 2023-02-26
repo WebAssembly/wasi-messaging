@@ -24,7 +24,7 @@ A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) A
 
 ### Introduction
 
-The messaging interfaces aim to provide a generic and flexible way for producers and consumers to communicate through message brokers. The pub interface allows producers to publish events to a specific channel in a broker, while the sub interface allows consumers to subscribe to a channel and receive events through a push-based mechanism. The handler interface provides an on-receive function that can be used to process received events with full abstraction of the underlying broker implementation.
+The messaging interfaces aim to provide a generic and flexible way for producers and consumers to communicate through message brokers. The `producer` interface allows producers to publish events to a specific channel in a broker, while the `consumer` interface allows consumers to subscribe to a channel and receive events through a push-based mechanism. The handler interface provides an on-receive function that can be used to process received events with full abstraction of the underlying broker implementation.
 
 ### Goals
 
@@ -32,7 +32,7 @@ The messaging service interfaces aim to address the need for a standard way to h
 
 However, implementing message-based communication can be challenging, as it requires dealing with the details of message brokers, such as connection management, channel setup, and message serialization. The messaging service interfaces aim to simplify this process by providing a standard way to interact with message brokers, hiding the underlying complexity from the user.
 
-This standardization can benefit various scenarios, such as microservice architectures, where each microservice can communicate with other microservices using the messaging service interfaces. Similarly, applications that need to handle event-driven or streaming data can benefit from the push-based message delivery mechanism provided by the `sub` and `handler` interfaces. Overall, the messaging service interfaces aim to make it easier to build complex and scalable software systems by providing a common foundation for message-based communication.
+This standardization can benefit various scenarios, such as microservice architectures, where each microservice can communicate with other microservices using the messaging service interfaces. Similarly, applications that need to handle event-driven or streaming data can benefit from the push-based message delivery mechanism provided by the `consumer` and `handler` interfaces. Overall, the messaging service interfaces aim to make it easier to build complex and scalable software systems by providing a common foundation for message-based communication.
 
 ### Non-goals
 
