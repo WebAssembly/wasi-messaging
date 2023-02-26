@@ -1,7 +1,6 @@
 /// An interface for a generic consumer.
 default interface sub {
-	use pkg.types.{broker, channel, subscription-token}
-	use err.tracing.{error}
+	use pkg.types.{broker, channel, subscription-token, error}
 
 	/// Subscribes to a channel in a broker.
 	subscribe: func(b: broker, c: channel) -> result<subscription-token, error>

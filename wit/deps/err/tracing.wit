@@ -1,9 +1,0 @@
-default interface tracing {
-	/// An error resource type.
-	/// Currently, this provides only one function to return a string representation
-	/// of the error. In the future, this will be extended to provide more information.
-	// TODO: switch to `resource error { ... }`
-	type error = u32
-	drop-error: func(e: error)
-	trace: func(e: error) -> string
-}
