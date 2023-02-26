@@ -28,11 +28,11 @@ The messaging interfaces aim to provide a generic and flexible way for producers
 
 ### Goals
 
-The messaging service interfaces aim to address the need for a standard way to handle message-based communication in modern software systems. In complex software systems, different components or even different applications need to communicate with each other to exchange information and coordinate their actions. Message-based communication, where one component or application sends a message to another, has become a popular way to achieve this.
+The messaging service interfaces aim to address the need for a standard way to handle message-based communication in modern software systems. In complex software systems, different components or even different applications need to communicate with each other to exchange information and coordinate their actions.
 
 However, implementing message-based communication can be challenging, as it requires dealing with the details of message brokers, such as connection management, channel setup, and message serialization. The messaging service interfaces aim to simplify this process by providing a standard way to interact with message brokers, hiding the underlying complexity from the user.
 
-This standardization can benefit various scenarios, such as microservices architectures, where each microservice can communicate with other microservices using the messaging service interfaces. Similarly, applications that need to handle event-driven or streaming data can benefit from the push-based message delivery mechanism provided by the sub and handler interfaces. Overall, the messaging service interfaces aim to make it easier to build complex and scalable software systems by providing a common foundation for message-based communication.
+This standardization can benefit various scenarios, such as microservice architectures, where each microservice can communicate with other microservices using the messaging service interfaces. Similarly, applications that need to handle event-driven or streaming data can benefit from the push-based message delivery mechanism provided by the `sub` and `handler` interfaces. Overall, the messaging service interfaces aim to make it easier to build complex and scalable software systems by providing a common foundation for message-based communication.
 
 ### Non-goals
 

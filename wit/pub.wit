@@ -3,6 +3,6 @@ default interface pub {
     use pkg.types.{broker, channel, event}
     use err.tracing.{error}
 
-	/// Publishes an event to a channel in a broker.
-	publish: func(b: broker, c: channel, e: event) -> result<_, error>
+    /// Publishes an event to a channel in a broker.
+    publish: func(b: broker, c: channel, e: event) -> result<_, error>
 }
