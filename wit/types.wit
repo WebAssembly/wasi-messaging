@@ -37,5 +37,5 @@ default interface messaging-types {
     // TODO: switch to `resource error { ... }`
     type error = u32
     drop-error: func(e: error)
-    trace: func(e: error) -> string
+    trace-error: func(e: error) -> string
 }
