@@ -40,5 +40,9 @@ This standardization can benefit various scenarios, such as microservice archite
 - The messaging service interfaces do not aim to provide support for every possible messaging pattern or use case. Instead, they focus on the common use cases of pub-sub and push-based message delivery. Other messaging patterns, such as request-reply or publish-confirm-subscribe, are outside the scope of the interfaces.
 - The messaging service interfaces do not aim to provide a specific implementation of a message broker. Instead, they provide a standard way to interact with any message broker that supports the interfaces.
 
+### API walk-through
+
+For a full API walk-through, see [wasi-messaging-demo](https://github.com/danbugs/wasi-messaging-demo).
+
 > Note: This README needs to be expanded to cover a number of additional fields suggested in the
 [WASI Proposal template](https://github.com/WebAssembly/wasi-proposal-template).
