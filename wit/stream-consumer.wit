@@ -1,0 +1,7 @@
+/// A stream consumer, commonly used for event streaming.
+default interface stream-consumer {
+	use pkg.types.{message, error, receiver}
+
+	/// `receive-message` satisfied pull-based messaging requirements
+	read-message(r: receiver, partition: u32, offset: u32) -> result<message, error>
+}

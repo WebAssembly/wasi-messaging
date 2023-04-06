@@ -1,7 +1,9 @@
-/// An interface for a consumer relying on push-based message delivery.
 default interface handler {
-    use pkg.types.{event, error}
+    use pkg.types.{message, error}
 
-    /// Creates an on-receive handler push-based message delivery.
-    on-receive: func(e: event) -> result<_, error>
+    /// Configures the handler, and must return a receiver obtained through `open-receiver` function implemented by the host.
+    configure-handler: func() -> result<receiver, error>
+
+    /// Creates an on-receive handler for push-based message delivery that may receive a batch of messages called by the host when messages are sent.
+    on-receive: func(m: list<message>) -> result<_, error>
 }

@@ -1,5 +1,11 @@
-default world messaging {
-	import producer: pkg.producer
-	import consumer: pkg.consumer
+default world load-balancer {
+	import basic-producer: pkg.basic-producer
+	import basic-consumer: pkg.basic-consumer
+	export handler: pkg.handler
+}
+
+world streamer {
+	import stream-producer: pkg.stream-producer
+	import stream-consumer: pkg.stream-consumer
 	export handler: pkg.handler
 }

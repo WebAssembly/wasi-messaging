@@ -1,41 +1,47 @@
-/// An interface grouping all necessary types for messaging.
 default interface messaging-types {
-    /// A broker type that allows the exchange of messages.
-    type broker = u32
-    drop-broker: func(b: broker)
-    open-broker: func(name: string) -> result<broker, error>
+    /// An object that allows connecting to a service (e.g., a broker).
+    type client = u32
+    drop-client: func(c: client)
+    open-client: func(name: string) -> result<client, error>
 
-    /// An event type that follows the CloudEvents specification (https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md). We
-    /// assume the type of the data is a byte sequence. It is up to the data schema to determine what type of the data payload the event 
-    /// contains.
-    record event {
-        specversion: string,
-        ty: string,
-        source: string,
-        id: string,
-        data: option<list<u8>>,
-        datacontenttype: option<string>,
-        dataschema: option<string>,
-        subject: option<string>,
-        time: option<string>,	
-        extensions: option<list<tuple<string, string>>>
+    /// An entity may be a queue or a topic and is identifiable by name.
+    type entity = string
+
+    /// A message contains binary data, a format specification, and a metadata decoration of key/value pairs.
+    ///     - The format could be: "CloudEvents/1.0", "HTTP/1.1" / "HTTP/2" / "HTTP/3", "AMQP/1.0", "MQTT/3.1.1" / "MQTT/5.0", "Kafka/0.11"
+    ///     as defined per: https://github.com/clemensv/spec/blob/registry-extensions/registry/spec.md#message-formats
+    record message {
+        data: list<u8>,
+        format: string,
+        metadata: option<list<tuple<string, string>>
     }
-    
-    /// Channels specify where a published message should land. There are two types of channels:
-    /// - queue: competitive consumers, and
-    /// - topic: non-competitive consumers.
-    variant channel {
-        queue(string),
-        topic(string)
-    }
-    
-    /// A subscription token that allows receives from a specific subscription
-    type subscription-token = string
+
     /// An error resource type.
     /// Currently, this provides only one function to return a string representation
     /// of the error. In the future, this will be extended to provide more information.
-    // TODO: switch to `resource error { ... }`
     type error = u32
     drop-error: func(e: error)
     trace-error: func(e: error) -> string
+
+    /// A receiver object off a client connection to a specific entity.
+	type receiver = u32
+	drop-receiver: func(r: receiver)
+	open-receiver: func(c: client, name: entity) -> result<receiver, error>
+
+    /// A message can exist in a queue under several statuses:
+	/// (1) available: the message is ready to be read,
+	/// (2) acquired: the message has been sent to a consumer (but still exists in the queue),
+	/// (3) accepted (result of complete-message): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
+	/// (4) rejected (result of abandon-message): the message has been received and NACK-ed by a consumer, at which point it can be:
+	/// 		- deleted,
+	///			- sent to a dead-letter queue, or
+	///			- kept in the queue for further processing.
+	/// ... which are configurations defined by the broker.
+	complete-message(r: receiver, m: message) -> result<_, error>
+	abandon-message(r: receiver, m: message) -> result<_, error>
+
+    /// A sender object off a client connection to a specific entity.
+    type sender = u32
+    drop-sender: func(s: sender)
+    open-sender: func(c: client, name: entity) -> result<sender, error>
 }
