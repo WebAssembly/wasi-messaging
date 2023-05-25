@@ -1,5 +1,0 @@
-default interface producer { 
-    use pkg.types.{client, channel, message, error}
-	
-	send: func(c: client, ch: channel, m: list<message>) -> result<_, error>
-}
