@@ -6,5 +6,5 @@ default interface guest {
     configure: func() -> result<guest-configuration, error>
 
     /// Whenever this guest receives a message in one of the subscribed channels, the message is sent to this handler
-    handler: func(ch: channel, ms: list<message>) -> result<_, error>
+    handler: func(ms: list<message>) -> result<_, error>
 }
