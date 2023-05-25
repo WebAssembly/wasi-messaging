@@ -37,8 +37,8 @@ default interface messaging-types {
   
     /// A message with a binary payload, a format specification, and decorative metadata.
     record message {
-      data: list<u8>,
-      format: format-spec,
-      metadata: option<list<tuple<string, string>>>
+        data: list<u8>,
+        format: format-spec,
+        metadata: option<list<tuple<string, string>>>
     }
 }
