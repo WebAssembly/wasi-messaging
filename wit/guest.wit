@@ -1,5 +1,5 @@
 default interface guest {
-    use pkg.types.{message, configuration, error}
+    use pkg.types.{message, guest-configuration, error}
 
     /// Returns the list of channels (and extension metadata within guest-configuration) that 
     /// this component should subscribe to and be handled by the subsequent handler within guest-configuration
