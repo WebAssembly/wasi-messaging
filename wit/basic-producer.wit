@@ -1,6 +1,0 @@
-default interface basic-producer { 
-    use pkg.types.{message, error, sender}
-
-    send-message: func(s: sender, m: message) -> result<_, error>
-    send-message-batch: func(s: sender, m: list<message>) -> result<_, error>
-}

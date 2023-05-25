@@ -1,6 +1,0 @@
-default interface producer { 
-    use pkg.types.{message, error, sender}
-
-    send-message: func(s: sender, m: message, partition: u32, offset: u32) -> result<_, error>
-    send-message-batch: func(s: sender, m: list<message>, partition: u32, offset: u32) -> result<_, error>
-}

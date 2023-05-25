@@ -1,7 +1,0 @@
-/// A basic consumer, commonly used for load-balancing.
-default interface basic-consumer {
-	use pkg.types.{message, error, receiver}
-
-	/// `receive-message` satisfied pull-based messaging requirements
-	receive-message(r: receiver) -> result<message, error>
-}
