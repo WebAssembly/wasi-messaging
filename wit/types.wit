@@ -1,4 +1,4 @@
-default interface messaging-types {
+interface messaging-types {
     /// A connection to a message-exchange service (e.g., buffer, broker, etc.).
     type client = u32
     disconnect: func(c: client)

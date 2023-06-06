@@ -1,6 +1,8 @@
-default world messaging {
-	import producer: pkg.producer
-	import consumer: pkg.consumer
+package wasi:messaging
 
-	export guest: pkg.guest
+world messaging {
+	import producer
+	import consumer
+
+	export messaging-guest
 }

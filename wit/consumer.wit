@@ -1,5 +1,6 @@
-default interface consumer {
-    use pkg.types.{client, message, channel, error, guest-configuration}
+interface consumer {
+    // {client, message, channel, error, guest-configuration}
+    use messaging-types.{client, message, channel, error, guest-configuration}
 
     /// Blocking receive for t-milliseconds with ephemeral subscription – if no message is received, returns None
     subscribe-try-receive: func(c: client, ch: channel, t-milliseconds: u32) -> result<option<list<message>>, error>
