@@ -1,5 +1,5 @@
 interface producer {
-    use messaging-types.{client, channel, message, error}
+    use messaging-types.{client, channel, message, error};
     
-    send: func(c: client, ch: channel, m: list<message>) -> result<_, error>
+    send: func(c: client, ch: channel, m: list<message>) -> result<_, error>;
 }
