@@ -1,15 +1,10 @@
-<h1><a name="messaging">World messaging</a></h1>
+<h1><a name="imports">World imports</a></h1>
 <ul>
 <li>Imports:
 <ul>
 <li>interface <a href="#wasi:messaging_messaging_types_0.2.0_draft"><code>wasi:messaging/messaging-types@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi:messaging_producer_0.2.0_draft"><code>wasi:messaging/producer@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi:messaging_consumer_0.2.0_draft"><code>wasi:messaging/consumer@0.2.0-draft</code></a></li>
-</ul>
-</li>
-<li>Exports:
-<ul>
-<li>interface <a href="#wasi:messaging_messaging_guest_0.2.0_draft"><code>wasi:messaging/messaging-guest@0.2.0-draft</code></a></li>
 </ul>
 </li>
 </ul>
@@ -186,35 +181,4 @@
 <h5>Return values</h5>
 <ul>
 <li><a name="abandon_message.0"></a> result&lt;_, own&lt;<a href="#error"><a href="#error"><code>error</code></a></a>&gt;&gt;</li>
-</ul>
-<h2><a name="wasi:messaging_messaging_guest_0.2.0_draft"></a>Export interface wasi:messaging/messaging-guest@0.2.0-draft</h2>
-<hr />
-<h3>Types</h3>
-<h4><a name="message"></a><code>type message</code></h4>
-<p><a href="#message"><a href="#message"><code>message</code></a></a></p>
-<p>
-#### <a name="guest_configuration"></a>`type guest-configuration`
-[`guest-configuration`](#guest_configuration)
-<p>
-#### <a name="error"></a>`type error`
-[`error`](#error)
-<p>
-----
-<h3>Functions</h3>
-<h4><a name="configure"></a><code>configure: func</code></h4>
-<p>Returns the list of channels (and extension metadata within guest-configuration) that
-this component should subscribe to and be handled by the subsequent handler within guest-configuration</p>
-<h5>Return values</h5>
-<ul>
-<li><a name="configure.0"></a> result&lt;<a href="#guest_configuration"><a href="#guest_configuration"><code>guest-configuration</code></a></a>, own&lt;<a href="#error"><a href="#error"><code>error</code></a></a>&gt;&gt;</li>
-</ul>
-<h4><a name="handler"></a><code>handler: func</code></h4>
-<p>Whenever this guest receives a message in one of the subscribed channels, the message is sent to this handler</p>
-<h5>Params</h5>
-<ul>
-<li><a name="handler.ms"></a><code>ms</code>: list&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="handler.0"></a> result&lt;_, own&lt;<a href="#error"><a href="#error"><code>error</code></a></a>&gt;&gt;</li>
 </ul>
