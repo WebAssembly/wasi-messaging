@@ -1,5 +1,7 @@
 interface producer {
     use messaging-types.{client, channel, message, error};
     
+    /// Sends a message to the given channel/topic. This topic can be overridden if a message has a
+    /// non-empty topic field
     send: func(c: client, ch: channel, m: list<message>) -> result<_, error>;
 }
