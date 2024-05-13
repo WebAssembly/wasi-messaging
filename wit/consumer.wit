@@ -1,17 +1,19 @@
+/// The consumer interface allows a guest to dynamically update its subscriptions and configuration
+/// as well as functionality for completing (acking) or abandoning (nacking) messages.
 interface consumer {
-    // {client, message, channel, error, guest-configuration}
-    use messaging-types.{client, message, channel, error, guest-configuration};
-
-    /// Blocking receive for t-milliseconds with ephemeral subscription – if no message is received, returns None
-    subscribe-try-receive: func(c: client, ch: channel, t-milliseconds: u32) -> result<option<list<message>>, error>;
-
-    /// Blocking receive until message with ephemeral subscription
-    subscribe-receive: func(c: client, ch: channel) -> result<list<message>, error>;
+    use types.{client, message, channel, error, guest-configuration};
 
     /// 'Fit-all' type function for updating a guest's configuration – this could be useful for:
     ///     - unsubscribing from a channel,
     ///     - checkpointing,
     ///     - etc..
+    /// 
+    /// Please note that implementations that provide `wasi:messaging` are responsible for ensuring
+    /// that guests are not allowed to subscribe to channels that they are not configured to
+    /// subscribe to (or have access to). Failure to do so can result in possible breakout or access
+    /// to resources that are not intended to be accessible to the guest. This means implementations
+    /// should validate that the configured topics are valid topics the guest should have access to or 
+    /// enforce it via the credentials used to connect to the service.
     update-guest-configuration: func(gc: guest-configuration) -> result<_, error>;
 
     /// A message can exist under several statuses:

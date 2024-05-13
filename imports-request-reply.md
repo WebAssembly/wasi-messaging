@@ -1,8 +1,9 @@
-<h1><a name="imports">World imports</a></h1>
+<h1><a name="imports_request_reply">World imports-request-reply</a></h1>
 <ul>
 <li>Imports:
 <ul>
 <li>interface <a href="#wasi:messaging_types_0.2.0_draft"><code>wasi:messaging/types@0.2.0-draft</code></a></li>
+<li>interface <a href="#wasi:messaging_request_reply_0.2.0_draft"><code>wasi:messaging/request-reply@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi:messaging_producer_0.2.0_draft"><code>wasi:messaging/producer@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi:messaging_consumer_0.2.0_draft"><code>wasi:messaging/consumer@0.2.0-draft</code></a></li>
 </ul>
@@ -90,6 +91,43 @@ message
 <h5>Return values</h5>
 <ul>
 <li><a name="static_client.connect.0"></a> result&lt;own&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+</ul>
+<h2><a name="wasi:messaging_request_reply_0.2.0_draft"></a>Import interface wasi:messaging/request-reply@0.2.0-draft</h2>
+<p>The request-reply interface allows a guest to send a message and await a response. This
+interface is considered optional as not all message services support the concept of
+request/reply. However, request/reply is a very common pattern in messaging and as such, we have
+included it as a core interface.</p>
+<hr />
+<h3>Types</h3>
+<h4><a name="client"></a><code>type client</code></h4>
+<p><a href="#client"><a href="#client"><code>client</code></a></a></p>
+<p>
+#### <a name="message"></a>`type message`
+[`message`](#message)
+<p>
+#### <a name="error"></a>`type error`
+[`error`](#error)
+<p>
+----
+<h3>Functions</h3>
+<h4><a name="request"></a><code>request: func</code></h4>
+<p>Performs a blocking request/reply operation with an optional timeout. If the timeout value
+is not set, then the request/reply operation will block indefinitely.</p>
+<p>Please note that implementations that provide <code>wasi:messaging</code> are responsible for ensuring
+that guests are not allowed to subscribe to channels that they are not configured to
+subscribe to (or have access to). Failure to do so can result in possible breakout or access
+to resources that are not intended to be accessible to the guest. This means implementations
+should validate that the reply-to field is a valid topic the guest should have access to or
+enforce it via the credentials used to connect to the service.</p>
+<h5>Params</h5>
+<ul>
+<li><a name="request.c"></a><code>c</code>: own&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
+<li><a name="request.msg"></a><code>msg</code>: <a href="#message"><a href="#message"><code>message</code></a></a></li>
+<li><a name="request.timeout_ms"></a><code>timeout-ms</code>: option&lt;<code>u32</code>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="request.0"></a> result&lt;option&lt;list&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
 <h2><a name="wasi:messaging_producer_0.2.0_draft"></a>Import interface wasi:messaging/producer@0.2.0-draft</h2>
 <p>The producer interface is used to send messages to a channel/topic.</p>

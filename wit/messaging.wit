@@ -5,7 +5,12 @@ world imports {
 	import consumer;
 }
 
+world imports-request-reply {
+	include imports;
+	import request-reply;
+}
+
 world messaging {
 	include imports;
-	export messaging-guest;
+	export guest;
 }

@@ -1,12 +1,21 @@
-interface messaging-types {
+interface types {
     /// A connection to a message-exchange service (e.g., buffer, broker, etc.).
     resource client {
         connect: static func(name: string) -> result<client, error>;
     }
     
-    /// TODO(danbugs): This should be eventually extracted as an underlying type for other wasi-cloud-core interfaces.
-    resource error {
-        trace: static func() -> string;    
+    /// Errors that can occur when using the messaging interface.
+    variant error {
+        /// The requested option is not authorized. This could be a topic it doesn't have
+        /// permission to subscribe to, or a permission it doesn't have to perform a specific
+        /// action. This error is mainly used when calling `update-guest-configuration`.
+        unauthorized,
+        /// The request or operation timed out.
+        timeout,
+        /// An error occurred with the connection. Includes a message for additional context
+        connection(string),
+        /// A catch all for other types of errors
+        other(string),
     }
   
     /// There are two types of channels:
@@ -16,8 +25,9 @@ interface messaging-types {
     /// The interface doesn't highlight this difference in the type itself as that's uniquely a consumer issue.
     type channel = string;
   
-    /// Configuration includes a required list of channels the guest is subscribing to, and an optional list of extensions key-value pairs 
-    /// (e.g., partitions/offsets to read from in Kafka/EventHubs, QoS etc.).
+    /// Configuration includes a required list of channels the guest is subscribing to, and an
+    /// optional list of extensions key-value pairs (e.g., partitions/offsets to read from in 
+    /// Kafka/EventHubs, QoS etc.).
     record guest-configuration {
         channels: list<channel>,
         extensions: option<list<tuple<string, string>>>
@@ -25,13 +35,19 @@ interface messaging-types {
   
     /// A message with a binary payload and additional information
     record message {
-        /// The topic or subject this message was received or should be sent on
-        topic: string,
-        /// An optional topic for use in request/response scenarios
+        /// The topic/subject/channel this message was received or should be sent on
+        topic: channel,
+        /// An optional content-type describing the format of the data in the message. This is 
+        /// sometimes described as the "format" type
+        content-type: option<string>,
+        /// An optional topic for use in request/response scenarios. Senders and consumers of
+        /// messages must not assume that this field is set and should handle it in their code
+        /// accordingly.
         reply-to: option<string>,
         /// An opaque blob of data
         data: list<u8>,
-        /// Optional metadata (also called headers or attributes in some systems) attached to the message
+        /// Optional metadata (also called headers or attributes in some systems) attached to the
+        /// message
         metadata: option<list<tuple<string, string>>>
     }
 }
