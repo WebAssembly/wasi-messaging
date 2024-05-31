@@ -4,5 +4,5 @@ interface producer {
     
     /// Sends a message to the given channel/topic. If the channel/topic is not empty, it will
     /// override the channel/topic in the message.
-    send: func(c: client, ch: channel, m: list<message>) -> result<_, error>;
+    send: func(c: client, ch: channel, m: message) -> result<_, error>;
 }

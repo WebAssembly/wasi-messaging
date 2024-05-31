@@ -56,36 +56,8 @@ Kafka/EventHubs, QoS etc.).</p>
 <li><a name="guest_configuration.channels"></a><code>channels</code>: list&lt;<a href="#channel"><a href="#channel"><code>channel</code></a></a>&gt;</li>
 <li><a name="guest_configuration.extensions"></a><code>extensions</code>: option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
 </ul>
-<h4><a name="message"></a><code>record message</code></h4>
-<p>A message with a binary payload and additional information</p>
-<h5>Record Fields</h5>
-<ul>
-<li>
-<p><a name="message.topic"></a><code>topic</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></p>
-<p>The topic/subject/channel this message was received or should be sent on
-</li>
-<li>
-<p><a name="message.content_type"></a><code>content-type</code>: option&lt;<code>string</code>&gt;</p>
-<p>An optional content-type describing the format of the data in the message. This is
-sometimes described as the "format" type
-</li>
-<li>
-<p><a name="message.reply_to"></a><code>reply-to</code>: option&lt;<code>string</code>&gt;</p>
-<p>An optional topic for use in request/response scenarios. Senders and consumers of
-messages must not assume that this field is set and should handle it in their code
-accordingly.
-</li>
-<li>
-<p><a name="message.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</p>
-<p>An opaque blob of data
-</li>
-<li>
-<p><a name="message.metadata"></a><code>metadata</code>: option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</p>
-<p>Optional metadata (also called headers or attributes in some systems) attached to the
-message
-</li>
-</ul>
-<hr />
+<h4><a name="message"></a><code>resource message</code></h4>
+<h2>A message with a binary payload and additional information</h2>
 <h3>Functions</h3>
 <h4><a name="static_client.connect"></a><code>[static]client.connect: func</code></h4>
 <h5>Params</h5>
@@ -95,6 +67,100 @@ message
 <h5>Return values</h5>
 <ul>
 <li><a name="static_client.connect.0"></a> result&lt;own&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+</ul>
+<h4><a name="constructor_message"></a><code>[constructor]message: func</code></h4>
+<h5>Params</h5>
+<ul>
+<li><a name="constructor_message.topic"></a><code>topic</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
+<li><a name="constructor_message.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</li>
+<li><a name="constructor_message.content_type"></a><code>content-type</code>: option&lt;<code>string</code>&gt;</li>
+<li><a name="constructor_message.metadata"></a><code>metadata</code>: option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="constructor_message.0"></a> own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h4><a name="method_message.topic"></a><code>[method]message.topic: func</code></h4>
+<p>The topic/subject/channel this message was received or should be sent on</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="method_message.topic.0"></a> <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
+</ul>
+<h4><a name="method_message.content_type"></a><code>[method]message.content-type: func</code></h4>
+<p>An optional content-type describing the format of the data in the message. This is
+sometimes described as the &quot;format&quot; type</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.content_type.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="method_message.content_type.0"></a> option&lt;<code>string</code>&gt;</li>
+</ul>
+<h4><a name="method_message.data"></a><code>[method]message.data: func</code></h4>
+<p>An opaque blob of data</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.data.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="method_message.data.0"></a> list&lt;<code>u8</code>&gt;</li>
+</ul>
+<h4><a name="method_message.metadata"></a><code>[method]message.metadata: func</code></h4>
+<p>Optional metadata (also called headers or attributes in some systems) attached to the
+message</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="method_message.metadata.0"></a> option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
+</ul>
+<h4><a name="method_message.complete"></a><code>[method]message.complete: func</code></h4>
+<p>Completes/acks the message</p>
+<p>A message can exist under several statuses:
+(1) available: the message is ready to be read,
+(2) acquired: the message has been sent to a consumer (but still exists in the queue),
+(3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
+(4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:</p>
+<ul>
+<li>deleted,</li>
+<li>sent to a dead-letter queue, or</li>
+<li>kept in the queue for further processing.</li>
+</ul>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.complete.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="method_message.complete.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+</ul>
+<h4><a name="method_message.abandon"></a><code>[method]message.abandon: func</code></h4>
+<p>Abandon/nacks the message</p>
+<p>A message can exist under several statuses:
+(1) available: the message is ready to be read,
+(2) acquired: the message has been sent to a consumer (but still exists in the queue),
+(3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
+(4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:</p>
+<ul>
+<li>deleted,</li>
+<li>sent to a dead-letter queue, or</li>
+<li>kept in the queue for further processing.</li>
+</ul>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.abandon.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="method_message.abandon.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
 <h2><a name="wasi:messaging_producer_0.2.0_draft"></a>Import interface wasi:messaging/producer@0.2.0-draft</h2>
 <p>The producer interface is used to send messages to a channel/topic.</p>
@@ -121,28 +187,18 @@ override the channel/topic in the message.</p>
 <ul>
 <li><a name="send.c"></a><code>c</code>: own&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
 <li><a name="send.ch"></a><code>ch</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
-<li><a name="send.m"></a><code>m</code>: list&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="send.m"></a><code>m</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
 <li><a name="send.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
 <h2><a name="wasi:messaging_consumer_0.2.0_draft"></a>Import interface wasi:messaging/consumer@0.2.0-draft</h2>
-<p>The consumer interface allows a guest to dynamically update its subscriptions and configuration
-as well as functionality for completing (acking) or abandoning (nacking) messages.</p>
+<p>The consumer interface allows a guest to dynamically update its subscriptions and configuration</p>
 <hr />
 <h3>Types</h3>
-<h4><a name="client"></a><code>type client</code></h4>
-<p><a href="#client"><a href="#client"><code>client</code></a></a></p>
-<p>
-#### <a name="message"></a>`type message`
-[`message`](#message)
-<p>
-#### <a name="channel"></a>`type channel`
-[`channel`](#channel)
-<p>
-#### <a name="error"></a>`type error`
-[`error`](#error)
+<h4><a name="error"></a><code>type error</code></h4>
+<p><a href="#error"><a href="#error"><code>error</code></a></a></p>
 <p>
 #### <a name="guest_configuration"></a>`type guest-configuration`
 [`guest-configuration`](#guest_configuration)
@@ -170,34 +226,6 @@ enforce it via the credentials used to connect to the service.</p>
 <ul>
 <li><a name="update_guest_configuration.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h4><a name="complete_message"></a><code>complete-message: func</code></h4>
-<p>A message can exist under several statuses:
-(1) available: the message is ready to be read,
-(2) acquired: the message has been sent to a consumer (but still exists in the queue),
-(3) accepted (result of complete-message): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
-(4) rejected (result of abandon-message): the message has been received and NACK-ed by a consumer, at which point it can be:</p>
-<ul>
-<li>deleted,</li>
-<li>sent to a dead-letter queue, or</li>
-<li>kept in the queue for further processing.</li>
-</ul>
-<h5>Params</h5>
-<ul>
-<li><a name="complete_message.m"></a><code>m</code>: <a href="#message"><a href="#message"><code>message</code></a></a></li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="complete_message.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
-<h4><a name="abandon_message"></a><code>abandon-message: func</code></h4>
-<h5>Params</h5>
-<ul>
-<li><a name="abandon_message.m"></a><code>m</code>: <a href="#message"><a href="#message"><code>message</code></a></a></li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="abandon_message.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
 <h2><a name="wasi:messaging_guest_0.2.0_draft"></a>Export interface wasi:messaging/guest@0.2.0-draft</h2>
 <hr />
 <h3>Types</h3>
@@ -214,10 +242,11 @@ enforce it via the credentials used to connect to the service.</p>
 <h3>Functions</h3>
 <h4><a name="handler"></a><code>handler: func</code></h4>
 <p>Whenever this guest receives a message in one of the subscribed channels, the message is
-sent to this handler</p>
+sent to this handler. The guest is responsible for matching on the channel and handling the
+message accordingly.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="handler.ms"></a><code>ms</code>: list&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="handler.ms"></a><code>ms</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>

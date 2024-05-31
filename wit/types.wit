@@ -34,20 +34,41 @@ interface types {
     }
   
     /// A message with a binary payload and additional information
-    record message {
+    resource message {
+        constructor(topic: channel, data: list<u8>, content-type: option<string>, metadata: option<list<tuple<string, string>>>);
         /// The topic/subject/channel this message was received or should be sent on
-        topic: channel,
+        topic: func() -> channel;
         /// An optional content-type describing the format of the data in the message. This is 
         /// sometimes described as the "format" type
-        content-type: option<string>,
-        /// An optional topic for use in request/response scenarios. Senders and consumers of
-        /// messages must not assume that this field is set and should handle it in their code
-        /// accordingly.
-        reply-to: option<string>,
+        content-type: func() -> option<string>;
         /// An opaque blob of data
-        data: list<u8>,
+        data: func() -> list<u8>;
         /// Optional metadata (also called headers or attributes in some systems) attached to the
         /// message
-        metadata: option<list<tuple<string, string>>>
+        metadata: func() -> option<list<tuple<string, string>>>;
+
+        /// Completes/acks the message
+        /// 
+        /// A message can exist under several statuses:
+        /// (1) available: the message is ready to be read,
+        /// (2) acquired: the message has been sent to a consumer (but still exists in the queue),
+        /// (3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
+        /// (4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:
+        ///         - deleted,
+        ///         - sent to a dead-letter queue, or
+        ///         - kept in the queue for further processing.
+        complete: func() -> result<_, error>;
+
+        /// Abandon/nacks the message
+        /// 
+        /// A message can exist under several statuses:
+        /// (1) available: the message is ready to be read,
+        /// (2) acquired: the message has been sent to a consumer (but still exists in the queue),
+        /// (3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
+        /// (4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:
+        ///         - deleted,
+        ///         - sent to a dead-letter queue, or
+        ///         - kept in the queue for further processing.
+        abandon: func() -> result<_, error>;
     }
 }

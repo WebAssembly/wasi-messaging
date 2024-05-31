@@ -2,6 +2,7 @@ interface guest {
     use types.{message, guest-configuration, error};
 
     /// Whenever this guest receives a message in one of the subscribed channels, the message is
-    /// sent to this handler
-    handler: func(ms: list<message>) -> result<_, error>;
+    /// sent to this handler. The guest is responsible for matching on the channel and handling the
+    /// message accordingly.
+    handler: func(ms: message) -> result<_, error>;
 }

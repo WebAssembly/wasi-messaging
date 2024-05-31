@@ -7,12 +7,10 @@ interface request-reply {
 
     /// Performs a blocking request/reply operation with an optional timeout. If the timeout value
     /// is not set, then the request/reply operation will block indefinitely.
-    /// 
-    /// Please note that implementations that provide `wasi:messaging` are responsible for ensuring
-    /// that guests are not allowed to subscribe to channels that they are not configured to
-    /// subscribe to (or have access to). Failure to do so can result in possible breakout or access
-    /// to resources that are not intended to be accessible to the guest. This means implementations
-    /// should validate that the reply-to field is a valid topic the guest should have access to or 
-    /// enforce it via the credentials used to connect to the service.
     request: func(c: client, msg: message, timeout-ms: option<u32>) -> result<option<list<message>>, error>;
+
+    /// Replies to the given message with the given response message. The details of which channel 
+    /// the message is sent to is up to the implementation. This allows for reply to details to be
+    /// handled in the best way possible for the underlying messaging system.
+    reply: func(reply-to: borrow<message>, reply: message) -> result<_, error>;
 }
