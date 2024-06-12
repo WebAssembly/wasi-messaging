@@ -26,11 +26,9 @@ interface types {
     type channel = string;
   
     /// Configuration includes a required list of channels the guest is subscribing to, and an
-    /// optional list of extensions key-value pairs (e.g., partitions/offsets to read from in 
-    /// Kafka/EventHubs, QoS etc.).
+    /// optional list of extensions key-value pairs
     record guest-configuration {
         channels: list<channel>,
-        extensions: option<list<tuple<string, string>>>
     }
   
     /// A message with a binary payload and additional information
@@ -38,14 +36,23 @@ interface types {
         constructor(topic: channel, data: list<u8>, content-type: option<string>, metadata: option<list<tuple<string, string>>>);
         /// The topic/subject/channel this message was received or should be sent on
         topic: func() -> channel;
+        /// Set the topic/subject/channel this message should be sent on
+        set-topic: func(topic: channel);
         /// An optional content-type describing the format of the data in the message. This is 
         /// sometimes described as the "format" type
         content-type: func() -> option<string>;
+        /// Set the content-type describing the format of the data in the message. This is
+        /// sometimes described as the "format" type
+        set-content-type: func(content-type: string);
         /// An opaque blob of data
         data: func() -> list<u8>;
+        /// Set the opaque blob of data for this message, discarding the old value
+        set-data: func(data: list<u8>);
         /// Optional metadata (also called headers or attributes in some systems) attached to the
         /// message
         metadata: func() -> option<list<tuple<string, string>>>;
+        /// Add a new key-value pair to the metadata, overwriting any existing value for the same key
+        add-metadata: func(key: string, value: string);
 
         /// Completes/acks the message
         /// 

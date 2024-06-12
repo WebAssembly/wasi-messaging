@@ -45,12 +45,10 @@ action. This error is mainly used when calling `update-guest-configuration`.
 <p>The interface doesn't highlight this difference in the type itself as that's uniquely a consumer issue.</p>
 <h4><a name="guest_configuration"></a><code>record guest-configuration</code></h4>
 <p>Configuration includes a required list of channels the guest is subscribing to, and an
-optional list of extensions key-value pairs (e.g., partitions/offsets to read from in
-Kafka/EventHubs, QoS etc.).</p>
+optional list of extensions key-value pairs</p>
 <h5>Record Fields</h5>
 <ul>
 <li><a name="guest_configuration.channels"></a><code>channels</code>: list&lt;<a href="#channel"><a href="#channel"><code>channel</code></a></a>&gt;</li>
-<li><a name="guest_configuration.extensions"></a><code>extensions</code>: option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
 </ul>
 <h4><a name="message"></a><code>resource message</code></h4>
 <h2>A message with a binary payload and additional information</h2>
@@ -86,6 +84,13 @@ Kafka/EventHubs, QoS etc.).</p>
 <ul>
 <li><a name="method_message.topic.0"></a> <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
 </ul>
+<h4><a name="method_message.set_topic"></a><code>[method]message.set-topic: func</code></h4>
+<p>Set the topic/subject/channel this message should be sent on</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.set_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="method_message.set_topic.topic"></a><code>topic</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
+</ul>
 <h4><a name="method_message.content_type"></a><code>[method]message.content-type: func</code></h4>
 <p>An optional content-type describing the format of the data in the message. This is
 sometimes described as the &quot;format&quot; type</p>
@@ -97,6 +102,14 @@ sometimes described as the &quot;format&quot; type</p>
 <ul>
 <li><a name="method_message.content_type.0"></a> option&lt;<code>string</code>&gt;</li>
 </ul>
+<h4><a name="method_message.set_content_type"></a><code>[method]message.set-content-type: func</code></h4>
+<p>Set the content-type describing the format of the data in the message. This is
+sometimes described as the &quot;format&quot; type</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.set_content_type.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="method_message.set_content_type.content_type"></a><code>content-type</code>: <code>string</code></li>
+</ul>
 <h4><a name="method_message.data"></a><code>[method]message.data: func</code></h4>
 <p>An opaque blob of data</p>
 <h5>Params</h5>
@@ -106,6 +119,13 @@ sometimes described as the &quot;format&quot; type</p>
 <h5>Return values</h5>
 <ul>
 <li><a name="method_message.data.0"></a> list&lt;<code>u8</code>&gt;</li>
+</ul>
+<h4><a name="method_message.set_data"></a><code>[method]message.set-data: func</code></h4>
+<p>Set the opaque blob of data for this message, discarding the old value</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.set_data.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="method_message.set_data.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</li>
 </ul>
 <h4><a name="method_message.metadata"></a><code>[method]message.metadata: func</code></h4>
 <p>Optional metadata (also called headers or attributes in some systems) attached to the
@@ -117,6 +137,14 @@ message</p>
 <h5>Return values</h5>
 <ul>
 <li><a name="method_message.metadata.0"></a> option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
+</ul>
+<h4><a name="method_message.add_metadata"></a><code>[method]message.add-metadata: func</code></h4>
+<p>Add a new key-value pair to the metadata, overwriting any existing value for the same key</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_message.add_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="method_message.add_metadata.key"></a><code>key</code>: <code>string</code></li>
+<li><a name="method_message.add_metadata.value"></a><code>value</code>: <code>string</code></li>
 </ul>
 <h4><a name="method_message.complete"></a><code>[method]message.complete: func</code></h4>
 <p>Completes/acks the message</p>
