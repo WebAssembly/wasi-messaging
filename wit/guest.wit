@@ -1,5 +1,5 @@
 interface guest {
-    use types.{message, guest-configuration, error};
+    use types.{message, config, error};
 
     /// Whenever this guest receives a message in one of the subscribed channels, the message is
     /// sent to this handler. The guest is responsible for matching on the channel and handling the

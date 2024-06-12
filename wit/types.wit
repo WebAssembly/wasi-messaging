@@ -8,7 +8,7 @@ interface types {
     variant error {
         /// The requested option is not authorized. This could be a topic it doesn't have
         /// permission to subscribe to, or a permission it doesn't have to perform a specific
-        /// action. This error is mainly used when calling `update-guest-configuration`.
+        /// action. This error is mainly used when calling `update-config`.
         unauthorized,
         /// The request or operation timed out.
         timeout,
@@ -25,9 +25,8 @@ interface types {
     /// The interface doesn't highlight this difference in the type itself as that's uniquely a consumer issue.
     type channel = string;
   
-    /// Configuration includes a required list of channels the guest is subscribing to, and an
-    /// optional list of extensions key-value pairs
-    record guest-configuration {
+    /// Configuration includes a required list of channels the guest is subscribing to
+    record config {
         channels: list<channel>,
     }
   

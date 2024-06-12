@@ -21,7 +21,7 @@
 <p><a name="error.unauthorized"></a><code>unauthorized</code></p>
 <p>The requested option is not authorized. This could be a topic it doesn't have
 permission to subscribe to, or a permission it doesn't have to perform a specific
-action. This error is mainly used when calling `update-guest-configuration`.
+action. This error is mainly used when calling `update-config`.
 </li>
 <li>
 <p><a name="error.timeout"></a><code>timeout</code></p>
@@ -42,12 +42,11 @@ action. This error is mainly used when calling `update-guest-configuration`.
 - publish-subscribe channel, which is a broadcast channel, and
 - point-to-point channel, which is a unicast channel.
 <p>The interface doesn't highlight this difference in the type itself as that's uniquely a consumer issue.</p>
-<h4><a name="guest_configuration"></a><code>record guest-configuration</code></h4>
-<p>Configuration includes a required list of channels the guest is subscribing to, and an
-optional list of extensions key-value pairs</p>
+<h4><a name="config"></a><code>record config</code></h4>
+<p>Configuration includes a required list of channels the guest is subscribing to</p>
 <h5>Record Fields</h5>
 <ul>
-<li><a name="guest_configuration.channels"></a><code>channels</code>: list&lt;<a href="#channel"><a href="#channel"><code>channel</code></a></a>&gt;</li>
+<li><a name="config.channels"></a><code>channels</code>: list&lt;<a href="#channel"><a href="#channel"><code>channel</code></a></a>&gt;</li>
 </ul>
 <h4><a name="message"></a><code>resource message</code></h4>
 <h2>A message with a binary payload and additional information</h2>
@@ -223,12 +222,12 @@ override the channel/topic in the message.</p>
 <h4><a name="error"></a><code>type error</code></h4>
 <p><a href="#error"><a href="#error"><code>error</code></a></a></p>
 <p>
-#### <a name="guest_configuration"></a>`type guest-configuration`
-[`guest-configuration`](#guest_configuration)
+#### <a name="config"></a>`type config`
+[`config`](#config)
 <p>
 ----
 <h3>Functions</h3>
-<h4><a name="update_guest_configuration"></a><code>update-guest-configuration: func</code></h4>
+<h4><a name="update_config"></a><code>update-config: func</code></h4>
 <p>'Fit-all' type function for updating a guest's configuration – this could be useful for:</p>
 <ul>
 <li>unsubscribing from a channel,</li>
@@ -243,9 +242,9 @@ should validate that the configured topics are valid topics the guest should hav
 enforce it via the credentials used to connect to the service.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="update_guest_configuration.gc"></a><code>gc</code>: <a href="#guest_configuration"><a href="#guest_configuration"><code>guest-configuration</code></a></a></li>
+<li><a name="update_config.gc"></a><code>gc</code>: <a href="#config"><a href="#config"><code>config</code></a></a></li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="update_guest_configuration.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="update_config.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
