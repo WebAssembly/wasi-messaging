@@ -5,9 +5,27 @@
 interface request-reply {
     use types.{client, message, error};
 
-    /// Performs a blocking request/reply operation with an optional timeout. If the timeout value
-    /// is not set, then the request/reply operation will block indefinitely.
-    request: func(c: client, msg: message, timeout-ms: option<u32>) -> result<option<list<message>>, error>;
+    /// Options for a request/reply operation. This is a resource to allow for future expansion of
+    /// options.
+    resource request-options {
+        /// Creates a new request options resource with no options set.
+        constructor();
+
+        /// The maximum amount of time to wait for a response. If the timeout value is not set, then
+        /// the request/reply operation will block until a message is received in response.
+        set-timeout-ms: func(timeout-ms: u32);
+    }
+
+    /// Performs a blocking request/reply operation with an optional set of request options. This
+    /// returns only the first reply received or a timeout . If more than one reply is expected, then the
+    /// `request-multi` function should be used instead.
+    request: func(c: borrow<client>, msg: message, opts: option<request-options>) -> result<message, error>;
+
+    /// Performs a blocking request/reply operation with an optional set of request options. This
+    /// returns all replies received up to the number of expected replies. It is recommended to use
+    /// a `request-options` with the timeout set to ensure that the operation does not block
+    /// indefinitely.
+    request-multi: func(c: borrow<client>, msg: message, expected-replies: u32, opts: option<request-options>) -> result<list<message>, error>;
 
     /// Replies to the given message with the given response message. The details of which channel 
     /// the message is sent to is up to the implementation. This allows for reply to details to be

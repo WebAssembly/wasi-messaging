@@ -1,11 +1,8 @@
 /// The consumer interface allows a guest to dynamically update its subscriptions and configuration
 interface consumer {
-    use types.{error, config};
+    use types.{error};
 
-    /// 'Fit-all' type function for updating a guest's configuration – this could be useful for:
-    ///     - unsubscribing from a channel,
-    ///     - checkpointing,
-    ///     - etc..
+    /// Set the current subscriptions for this guest.
     /// 
     /// Please note that implementations that provide `wasi:messaging` are responsible for ensuring
     /// that guests are not allowed to subscribe to channels that they are not configured to
@@ -13,5 +10,5 @@ interface consumer {
     /// to resources that are not intended to be accessible to the guest. This means implementations
     /// should validate that the configured topics are valid topics the guest should have access to or 
     /// enforce it via the credentials used to connect to the service.
-    update-config: func(gc: config) -> result<_, error>;
+    set-subscriptions: func(topics: list<string>) -> result<_, error>;
 }

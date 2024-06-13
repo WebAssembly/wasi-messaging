@@ -12,5 +12,5 @@ world imports-request-reply {
 
 world messaging {
 	include imports;
-	export guest;
+	export incoming-handler;
 }

@@ -22,7 +22,7 @@
 <p><a name="error.unauthorized"></a><code>unauthorized</code></p>
 <p>The requested option is not authorized. This could be a topic it doesn't have
 permission to subscribe to, or a permission it doesn't have to perform a specific
-action. This error is mainly used when calling `update-config`.
+action. This error is mainly used when calling `set-subscriptions` on a guest.
 </li>
 <li>
 <p><a name="error.timeout"></a><code>timeout</code></p>
@@ -33,21 +33,13 @@ action. This error is mainly used when calling `update-config`.
 <p>An error occurred with the connection. Includes a message for additional context
 </li>
 <li>
+<p><a name="error.abandoned"></a><code>abandoned</code>: <code>string</code></p>
+<p>Work on the message was abandoned for the given reason
+</li>
+<li>
 <p><a name="error.other"></a><code>other</code>: <code>string</code></p>
 <p>A catch all for other types of errors
 </li>
-</ul>
-<h4><a name="channel"></a><code>type channel</code></h4>
-<p><code>string</code></p>
-<p>There are two types of channels:
-- publish-subscribe channel, which is a broadcast channel, and
-- point-to-point channel, which is a unicast channel.
-<p>The interface doesn't highlight this difference in the type itself as that's uniquely a consumer issue.</p>
-<h4><a name="config"></a><code>record config</code></h4>
-<p>Configuration includes a required list of channels the guest is subscribing to</p>
-<h5>Record Fields</h5>
-<ul>
-<li><a name="config.channels"></a><code>channels</code>: list&lt;<a href="#channel"><a href="#channel"><code>channel</code></a></a>&gt;</li>
 </ul>
 <h4><a name="message"></a><code>resource message</code></h4>
 <h2>A message with a binary payload and additional information</h2>
@@ -64,10 +56,8 @@ action. This error is mainly used when calling `update-config`.
 <h4><a name="constructor_message"></a><code>[constructor]message: func</code></h4>
 <h5>Params</h5>
 <ul>
-<li><a name="constructor_message.topic"></a><code>topic</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
+<li><a name="constructor_message.topic"></a><code>topic</code>: <code>string</code></li>
 <li><a name="constructor_message.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</li>
-<li><a name="constructor_message.content_type"></a><code>content-type</code>: option&lt;<code>string</code>&gt;</li>
-<li><a name="constructor_message.metadata"></a><code>metadata</code>: option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
@@ -81,14 +71,14 @@ action. This error is mainly used when calling `update-config`.
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="method_message.topic.0"></a> <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
+<li><a name="method_message.topic.0"></a> <code>string</code></li>
 </ul>
 <h4><a name="method_message.set_topic"></a><code>[method]message.set-topic: func</code></h4>
 <p>Set the topic/subject/channel this message should be sent on</p>
 <h5>Params</h5>
 <ul>
 <li><a name="method_message.set_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a name="method_message.set_topic.topic"></a><code>topic</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
+<li><a name="method_message.set_topic.topic"></a><code>topic</code>: <code>string</code></li>
 </ul>
 <h4><a name="method_message.content_type"></a><code>[method]message.content-type: func</code></h4>
 <p>An optional content-type describing the format of the data in the message. This is
@@ -145,46 +135,6 @@ message</p>
 <li><a name="method_message.add_metadata.key"></a><code>key</code>: <code>string</code></li>
 <li><a name="method_message.add_metadata.value"></a><code>value</code>: <code>string</code></li>
 </ul>
-<h4><a name="method_message.complete"></a><code>[method]message.complete: func</code></h4>
-<p>Completes/acks the message</p>
-<p>A message can exist under several statuses:
-(1) available: the message is ready to be read,
-(2) acquired: the message has been sent to a consumer (but still exists in the queue),
-(3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
-(4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:</p>
-<ul>
-<li>deleted,</li>
-<li>sent to a dead-letter queue, or</li>
-<li>kept in the queue for further processing.</li>
-</ul>
-<h5>Params</h5>
-<ul>
-<li><a name="method_message.complete.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="method_message.complete.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
-<h4><a name="method_message.abandon"></a><code>[method]message.abandon: func</code></h4>
-<p>Abandon/nacks the message</p>
-<p>A message can exist under several statuses:
-(1) available: the message is ready to be read,
-(2) acquired: the message has been sent to a consumer (but still exists in the queue),
-(3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
-(4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:</p>
-<ul>
-<li>deleted,</li>
-<li>sent to a dead-letter queue, or</li>
-<li>kept in the queue for further processing.</li>
-</ul>
-<h5>Params</h5>
-<ul>
-<li><a name="method_message.abandon.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="method_message.abandon.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
 <h2><a name="wasi:messaging_request_reply_0.2.0_draft"></a>Import interface wasi:messaging/request-reply@0.2.0-draft</h2>
 <p>The request-reply interface allows a guest to send a message and await a response. This
 interface is considered optional as not all message services support the concept of
@@ -201,20 +151,53 @@ included it as a core interface.</p>
 #### <a name="error"></a>`type error`
 [`error`](#error)
 <p>
-----
+#### <a name="request_options"></a>`resource request-options`
+<h2>Options for a request/reply operation. This is a resource to allow for future expansion of
+options.</h2>
 <h3>Functions</h3>
-<h4><a name="request"></a><code>request: func</code></h4>
-<p>Performs a blocking request/reply operation with an optional timeout. If the timeout value
-is not set, then the request/reply operation will block indefinitely.</p>
+<h4><a name="constructor_request_options"></a><code>[constructor]request-options: func</code></h4>
+<p>Creates a new request options resource with no options set.</p>
+<h5>Return values</h5>
+<ul>
+<li><a name="constructor_request_options.0"></a> own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;</li>
+</ul>
+<h4><a name="method_request_options.set_timeout_ms"></a><code>[method]request-options.set-timeout-ms: func</code></h4>
+<p>The maximum amount of time to wait for a response. If the timeout value is not set, then
+the request/reply operation will block until a message is received in response.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="request.c"></a><code>c</code>: own&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
+<li><a name="method_request_options.set_timeout_ms.self"></a><code>self</code>: borrow&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;</li>
+<li><a name="method_request_options.set_timeout_ms.timeout_ms"></a><code>timeout-ms</code>: <code>u32</code></li>
+</ul>
+<h4><a name="request"></a><code>request: func</code></h4>
+<p>Performs a blocking request/reply operation with an optional set of request options. This
+returns only the first reply received or a timeout . If more than one reply is expected, then the
+<a href="#request_multi"><code>request-multi</code></a> function should be used instead.</p>
+<h5>Params</h5>
+<ul>
+<li><a name="request.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
 <li><a name="request.msg"></a><code>msg</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a name="request.timeout_ms"></a><code>timeout-ms</code>: option&lt;<code>u32</code>&gt;</li>
+<li><a name="request.opts"></a><code>opts</code>: option&lt;own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="request.0"></a> result&lt;option&lt;list&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="request.0"></a> result&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+</ul>
+<h4><a name="request_multi"></a><code>request-multi: func</code></h4>
+<p>Performs a blocking request/reply operation with an optional set of request options. This
+returns all replies received up to the number of expected replies. It is recommended to use
+a <a href="#request_options"><code>request-options</code></a> with the timeout set to ensure that the operation does not block
+indefinitely.</p>
+<h5>Params</h5>
+<ul>
+<li><a name="request_multi.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
+<li><a name="request_multi.msg"></a><code>msg</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a name="request_multi.expected_replies"></a><code>expected-replies</code>: <code>u32</code></li>
+<li><a name="request_multi.opts"></a><code>opts</code>: option&lt;own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a name="request_multi.0"></a> result&lt;list&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
 <h4><a name="reply"></a><code>reply: func</code></h4>
 <p>Replies to the given message with the given response message. The details of which channel
@@ -236,9 +219,6 @@ handled in the best way possible for the underlying messaging system.</p>
 <h4><a name="client"></a><code>type client</code></h4>
 <p><a href="#client"><a href="#client"><code>client</code></a></a></p>
 <p>
-#### <a name="channel"></a>`type channel`
-[`channel`](#channel)
-<p>
 #### <a name="message"></a>`type message`
 [`message`](#message)
 <p>
@@ -248,12 +228,10 @@ handled in the best way possible for the underlying messaging system.</p>
 ----
 <h3>Functions</h3>
 <h4><a name="send"></a><code>send: func</code></h4>
-<p>Sends a message to the given channel/topic. If the channel/topic is not empty, it will
-override the channel/topic in the message.</p>
+<p>Sends the message using the given client.</p>
 <h5>Params</h5>
 <ul>
 <li><a name="send.c"></a><code>c</code>: own&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
-<li><a name="send.ch"></a><code>ch</code>: <a href="#channel"><a href="#channel"><code>channel</code></a></a></li>
 <li><a name="send.m"></a><code>m</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
@@ -267,18 +245,10 @@ override the channel/topic in the message.</p>
 <h4><a name="error"></a><code>type error</code></h4>
 <p><a href="#error"><a href="#error"><code>error</code></a></a></p>
 <p>
-#### <a name="config"></a>`type config`
-[`config`](#config)
-<p>
 ----
 <h3>Functions</h3>
-<h4><a name="update_config"></a><code>update-config: func</code></h4>
-<p>'Fit-all' type function for updating a guest's configuration – this could be useful for:</p>
-<ul>
-<li>unsubscribing from a channel,</li>
-<li>checkpointing,</li>
-<li>etc..</li>
-</ul>
+<h4><a name="set_subscriptions"></a><code>set-subscriptions: func</code></h4>
+<p>Set the current subscriptions for this guest.</p>
 <p>Please note that implementations that provide <code>wasi:messaging</code> are responsible for ensuring
 that guests are not allowed to subscribe to channels that they are not configured to
 subscribe to (or have access to). Failure to do so can result in possible breakout or access
@@ -287,9 +257,9 @@ should validate that the configured topics are valid topics the guest should hav
 enforce it via the credentials used to connect to the service.</p>
 <h5>Params</h5>
 <ul>
-<li><a name="update_config.gc"></a><code>gc</code>: <a href="#config"><a href="#config"><code>config</code></a></a></li>
+<li><a name="set_subscriptions.topics"></a><code>topics</code>: list&lt;<code>string</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="update_config.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="set_subscriptions.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>

@@ -8,35 +8,25 @@ interface types {
     variant error {
         /// The requested option is not authorized. This could be a topic it doesn't have
         /// permission to subscribe to, or a permission it doesn't have to perform a specific
-        /// action. This error is mainly used when calling `update-config`.
+        /// action. This error is mainly used when calling `set-subscriptions` on a guest.
         unauthorized,
         /// The request or operation timed out.
         timeout,
         /// An error occurred with the connection. Includes a message for additional context
         connection(string),
+        /// Work on the message was abandoned for the given reason
+        abandoned(string),
         /// A catch all for other types of errors
         other(string),
     }
   
-    /// There are two types of channels:
-    /// - publish-subscribe channel, which is a broadcast channel, and
-    /// - point-to-point channel, which is a unicast channel.
-    ///
-    /// The interface doesn't highlight this difference in the type itself as that's uniquely a consumer issue.
-    type channel = string;
-  
-    /// Configuration includes a required list of channels the guest is subscribing to
-    record config {
-        channels: list<channel>,
-    }
-  
     /// A message with a binary payload and additional information
     resource message {
-        constructor(topic: channel, data: list<u8>, content-type: option<string>, metadata: option<list<tuple<string, string>>>);
+        constructor(topic: string, data: list<u8>);
         /// The topic/subject/channel this message was received or should be sent on
-        topic: func() -> channel;
+        topic: func() -> string;
         /// Set the topic/subject/channel this message should be sent on
-        set-topic: func(topic: channel);
+        set-topic: func(topic: string);
         /// An optional content-type describing the format of the data in the message. This is 
         /// sometimes described as the "format" type
         content-type: func() -> option<string>;
@@ -52,29 +42,5 @@ interface types {
         metadata: func() -> option<list<tuple<string, string>>>;
         /// Add a new key-value pair to the metadata, overwriting any existing value for the same key
         add-metadata: func(key: string, value: string);
-
-        /// Completes/acks the message
-        /// 
-        /// A message can exist under several statuses:
-        /// (1) available: the message is ready to be read,
-        /// (2) acquired: the message has been sent to a consumer (but still exists in the queue),
-        /// (3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
-        /// (4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:
-        ///         - deleted,
-        ///         - sent to a dead-letter queue, or
-        ///         - kept in the queue for further processing.
-        complete: func() -> result<_, error>;
-
-        /// Abandon/nacks the message
-        /// 
-        /// A message can exist under several statuses:
-        /// (1) available: the message is ready to be read,
-        /// (2) acquired: the message has been sent to a consumer (but still exists in the queue),
-        /// (3) accepted (result of complete): the message has been received and ACK-ed by a consumer and can be safely removed from the queue,
-        /// (4) rejected (result of abandon): the message has been received and NACK-ed by a consumer, at which point it can be:
-        ///         - deleted,
-        ///         - sent to a dead-letter queue, or
-        ///         - kept in the queue for further processing.
-        abandon: func() -> result<_, error>;
     }
 }
