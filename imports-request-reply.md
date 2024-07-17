@@ -169,6 +169,16 @@ the request/reply operation will block until a message is received in response.<
 <li><a name="method_request_options.set_timeout_ms.self"></a><code>self</code>: borrow&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;</li>
 <li><a name="method_request_options.set_timeout_ms.timeout_ms"></a><code>timeout-ms</code>: <code>u32</code></li>
 </ul>
+<h4><a name="method_request_options.set_expected_replies"></a><code>[method]request-options.set-expected-replies: func</code></h4>
+<p>The maximum number of replies to expect before returning. This only applies to
+<a href="#request_multi"><code>request-multi</code></a> and is ignored otherwise. If the number of replies is not set and
+timeout isn't set, then the operation will block until a message is received in
+response (essentially the same behavior as <a href="#request"><code>request</code></a>).</p>
+<h5>Params</h5>
+<ul>
+<li><a name="method_request_options.set_expected_replies.self"></a><code>self</code>: borrow&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;</li>
+<li><a name="method_request_options.set_expected_replies.expected_replies"></a><code>expected-replies</code>: <code>u32</code></li>
+</ul>
 <h4><a name="request"></a><code>request: func</code></h4>
 <p>Performs a blocking request/reply operation with an optional set of request options. This
 returns only the first reply received or a timeout . If more than one reply is expected, then the
@@ -185,14 +195,16 @@ returns only the first reply received or a timeout . If more than one reply is e
 </ul>
 <h4><a name="request_multi"></a><code>request-multi: func</code></h4>
 <p>Performs a blocking request/reply operation with an optional set of request options. This
-returns all replies received up to the number of expected replies. It is recommended to use
-a <a href="#request_options"><code>request-options</code></a> with the timeout set to ensure that the operation does not block
-indefinitely.</p>
+returns all replies received up until timeout or the configured set of expected replies. It
+is recommended to use a <a href="#request_options"><code>request-options</code></a> with the timeout set to ensure that the operation
+does not block indefinitely. Unlike request, this function should not return an error on
+timeout and should instead return all of the replies received up to that point. This is to
+faciliate use in scatter/gather operations where the number of expected replies is not
+known.</p>
 <h5>Params</h5>
 <ul>
 <li><a name="request_multi.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
 <li><a name="request_multi.msg"></a><code>msg</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a name="request_multi.expected_replies"></a><code>expected-replies</code>: <code>u32</code></li>
 <li><a name="request_multi.opts"></a><code>opts</code>: option&lt;own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;&gt;</li>
 </ul>
 <h5>Return values</h5>
