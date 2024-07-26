@@ -15,29 +15,30 @@ interface request-reply {
         /// the request/reply operation will block until a message is received in response.
         set-timeout-ms: func(timeout-ms: u32);
 
-        /// The maximum number of replies to expect before returning. This only applies to
-        /// `request-multi` and is ignored otherwise. If the number of replies is not set and
-        /// timeout isn't set, then the operation will block until a message is received in
-        /// response (essentially the same behavior as `request`).
+        /// The maximum number of replies to expect before returning.
         set-expected-replies: func(expected-replies: u32);
     }
 
-    /// Performs a blocking request/reply operation with an optional set of request options. This
-    /// returns only the first reply received or a timeout . If more than one reply is expected, then the
-    /// `request-multi` function should be used instead.
-    request: func(c: borrow<client>, msg: message, opts: option<request-options>) -> result<message, error>;
-
-    /// Performs a blocking request/reply operation with an optional set of request options. This
-    /// returns all replies received up until timeout or the configured set of expected replies. It
-    /// is recommended to use a `request-options` with the timeout set to ensure that the operation
-    /// does not block indefinitely. Unlike request, this function should not return an error on
-    /// timeout and should instead return all of the replies received up to that point. This is to
-    /// faciliate use in scatter/gather operations where the number of expected replies is not
-    /// known.
-    request-multi: func(c: borrow<client>, msg: message, opts: option<request-options>) -> result<list<message>, error>;
+    /// Performs a blocking request/reply operation with an optional set of request options. 
+    /// 
+    /// The behavior of this function is largely dependent on the options given to the function.
+    /// If no options are provided, then the request/reply operation will block until a single 
+    /// message is received in response. If a timeout is provided, then the request/reply operation
+    /// will block for the specified amount of time before returning an error if no messages were
+    /// received (or the list of messages that were received). If both a timeout and an expected
+    /// number of replies are provided, then the request/reply operation will block for the specified
+    /// amount of time or until the specified number of replies are received.
+    request: func(c: borrow<client>, msg: message, opts: option<request-options>) -> result<list<message>, error>;
 
     /// Replies to the given message with the given response message. The details of which channel 
     /// the message is sent to is up to the implementation. This allows for reply to details to be
     /// handled in the best way possible for the underlying messaging system.
+    /// 
+    /// Please note that this reply functionality is different than something like HTTP because there
+    /// are several use cases in which a reply might not be required for every message (so this would
+    /// be a noop). There are also cases when you might want to reply and then continue processing.
+    /// Additionally, you might want to reply to a message several times (such as providing an
+    /// update). So this function is allowed to be called multiple times, unlike something like HTTP
+    /// where the reply is sent and the connection is closed.
     reply: func(reply-to: borrow<message>, reply: message) -> result<_, error>;
 }

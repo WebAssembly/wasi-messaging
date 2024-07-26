@@ -6,16 +6,10 @@ interface types {
     
     /// Errors that can occur when using the messaging interface.
     variant error {
-        /// The requested option is not authorized. This could be a topic it doesn't have
-        /// permission to subscribe to, or a permission it doesn't have to perform a specific
-        /// action. This error is mainly used when calling `set-subscriptions` on a guest.
-        unauthorized,
         /// The request or operation timed out.
         timeout,
         /// An error occurred with the connection. Includes a message for additional context
         connection(string),
-        /// Work on the message was abandoned for the given reason
-        abandoned(string),
         /// A catch all for other types of errors
         other(string),
     }

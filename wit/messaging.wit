@@ -2,7 +2,6 @@ package wasi:messaging@0.2.0-draft;
 
 world imports {
 	import producer;
-	import consumer;
 }
 
 world imports-request-reply {

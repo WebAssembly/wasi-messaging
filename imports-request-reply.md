@@ -5,7 +5,6 @@
 <li>interface <a href="#wasi:messaging_types_0.2.0_draft"><code>wasi:messaging/types@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi:messaging_request_reply_0.2.0_draft"><code>wasi:messaging/request-reply@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi:messaging_producer_0.2.0_draft"><code>wasi:messaging/producer@0.2.0-draft</code></a></li>
-<li>interface <a href="#wasi:messaging_consumer_0.2.0_draft"><code>wasi:messaging/consumer@0.2.0-draft</code></a></li>
 </ul>
 </li>
 </ul>
@@ -19,22 +18,12 @@
 <h5>Variant Cases</h5>
 <ul>
 <li>
-<p><a name="error.unauthorized"></a><code>unauthorized</code></p>
-<p>The requested option is not authorized. This could be a topic it doesn't have
-permission to subscribe to, or a permission it doesn't have to perform a specific
-action. This error is mainly used when calling `set-subscriptions` on a guest.
-</li>
-<li>
 <p><a name="error.timeout"></a><code>timeout</code></p>
 <p>The request or operation timed out.
 </li>
 <li>
 <p><a name="error.connection"></a><code>connection</code>: <code>string</code></p>
 <p>An error occurred with the connection. Includes a message for additional context
-</li>
-<li>
-<p><a name="error.abandoned"></a><code>abandoned</code>: <code>string</code></p>
-<p>Work on the message was abandoned for the given reason
 </li>
 <li>
 <p><a name="error.other"></a><code>other</code>: <code>string</code></p>
@@ -170,19 +159,21 @@ the request/reply operation will block until a message is received in response.<
 <li><a name="method_request_options.set_timeout_ms.timeout_ms"></a><code>timeout-ms</code>: <code>u32</code></li>
 </ul>
 <h4><a name="method_request_options.set_expected_replies"></a><code>[method]request-options.set-expected-replies: func</code></h4>
-<p>The maximum number of replies to expect before returning. This only applies to
-<a href="#request_multi"><code>request-multi</code></a> and is ignored otherwise. If the number of replies is not set and
-timeout isn't set, then the operation will block until a message is received in
-response (essentially the same behavior as <a href="#request"><code>request</code></a>).</p>
+<p>The maximum number of replies to expect before returning.</p>
 <h5>Params</h5>
 <ul>
 <li><a name="method_request_options.set_expected_replies.self"></a><code>self</code>: borrow&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;</li>
 <li><a name="method_request_options.set_expected_replies.expected_replies"></a><code>expected-replies</code>: <code>u32</code></li>
 </ul>
 <h4><a name="request"></a><code>request: func</code></h4>
-<p>Performs a blocking request/reply operation with an optional set of request options. This
-returns only the first reply received or a timeout . If more than one reply is expected, then the
-<a href="#request_multi"><code>request-multi</code></a> function should be used instead.</p>
+<p>Performs a blocking request/reply operation with an optional set of request options.</p>
+<p>The behavior of this function is largely dependent on the options given to the function.
+If no options are provided, then the request/reply operation will block until a single
+message is received in response. If a timeout is provided, then the request/reply operation
+will block for the specified amount of time before returning an error if no messages were
+received (or the list of messages that were received). If both a timeout and an expected
+number of replies are provided, then the request/reply operation will block for the specified
+amount of time or until the specified number of replies are received.</p>
 <h5>Params</h5>
 <ul>
 <li><a name="request.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
@@ -191,30 +182,18 @@ returns only the first reply received or a timeout . If more than one reply is e
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a name="request.0"></a> result&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
-<h4><a name="request_multi"></a><code>request-multi: func</code></h4>
-<p>Performs a blocking request/reply operation with an optional set of request options. This
-returns all replies received up until timeout or the configured set of expected replies. It
-is recommended to use a <a href="#request_options"><code>request-options</code></a> with the timeout set to ensure that the operation
-does not block indefinitely. Unlike request, this function should not return an error on
-timeout and should instead return all of the replies received up to that point. This is to
-faciliate use in scatter/gather operations where the number of expected replies is not
-known.</p>
-<h5>Params</h5>
-<ul>
-<li><a name="request_multi.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
-<li><a name="request_multi.msg"></a><code>msg</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a name="request_multi.opts"></a><code>opts</code>: option&lt;own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;&gt;</li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="request_multi.0"></a> result&lt;list&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a name="request.0"></a> result&lt;list&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
 <h4><a name="reply"></a><code>reply: func</code></h4>
 <p>Replies to the given message with the given response message. The details of which channel
 the message is sent to is up to the implementation. This allows for reply to details to be
 handled in the best way possible for the underlying messaging system.</p>
+<p>Please note that this reply functionality is different than something like HTTP because there
+are several use cases in which a reply might not be required for every message (so this would)
+be a noop. There are also cases when you might want to reply and then continue processing.
+Additionally, you might want to reply to a message several times (such as providing an
+update). So this function is allowed to be called multiple times, unlike something like HTTP
+where the reply is sent and the connection is closed.</p>
 <h5>Params</h5>
 <ul>
 <li><a name="reply.reply_to"></a><code>reply-to</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
@@ -249,29 +228,4 @@ handled in the best way possible for the underlying messaging system.</p>
 <h5>Return values</h5>
 <ul>
 <li><a name="send.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
-<h2><a name="wasi:messaging_consumer_0.2.0_draft"></a>Import interface wasi:messaging/consumer@0.2.0-draft</h2>
-<p>The consumer interface allows a guest to dynamically update its subscriptions and configuration</p>
-<hr />
-<h3>Types</h3>
-<h4><a name="error"></a><code>type error</code></h4>
-<p><a href="#error"><a href="#error"><code>error</code></a></a></p>
-<p>
-----
-<h3>Functions</h3>
-<h4><a name="set_subscriptions"></a><code>set-subscriptions: func</code></h4>
-<p>Set the current subscriptions for this guest.</p>
-<p>Please note that implementations that provide <code>wasi:messaging</code> are responsible for ensuring
-that guests are not allowed to subscribe to channels that they are not configured to
-subscribe to (or have access to). Failure to do so can result in possible breakout or access
-to resources that are not intended to be accessible to the guest. This means implementations
-should validate that the configured topics are valid topics the guest should have access to or
-enforce it via the credentials used to connect to the service.</p>
-<h5>Params</h5>
-<ul>
-<li><a name="set_subscriptions.topics"></a><code>topics</code>: list&lt;<code>string</code>&gt;</li>
-</ul>
-<h5>Return values</h5>
-<ul>
-<li><a name="set_subscriptions.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
