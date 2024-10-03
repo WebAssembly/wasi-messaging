@@ -9,7 +9,12 @@ world imports-request-reply {
 	import request-reply;
 }
 
-world messaging {
+world messaging-request-reply {
+	include imports-request-reply;
+	export incoming-handler;
+}
+
+world messaging-core {
 	include imports;
 	export incoming-handler;
 }

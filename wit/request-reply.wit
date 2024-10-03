@@ -26,12 +26,15 @@ interface request-reply {
     /// message is received in response. If a timeout is provided, then the request/reply operation
     /// will block for the specified amount of time before returning an error if no messages were
     /// received (or the list of messages that were received). If both a timeout and an expected
-    /// number of replies are provided, then the request/reply operation will block for the specified
-    /// amount of time or until the specified number of replies are received.
-    request: func(c: borrow<client>, msg: message, opts: option<request-options>) -> result<list<message>, error>;
+    /// number of replies are provided, the function should return when either condition is met
+    /// (whichever comes first)—e.g., (1) if no replies were received within the timeout return an
+    /// error, (2) if the maximum expected number of replies were received before timeout, return
+    /// the list of messages, or (3) if the timeout is reached before the expected number of replies,
+    /// return the list of messages received up to that point.
+    request: func(c: borrow<client>, msg: borrow<message>, opts: option<request-options>) -> result<list<message>, error>;
 
     /// Replies to the given message with the given response message. The details of which channel 
-    /// the message is sent to is up to the implementation. This allows for reply to details to be
+    /// the message is sent to is up to the implementation. This allows for reply-to details to be
     /// handled in the best way possible for the underlying messaging system.
     /// 
     /// Please note that this reply functionality is different than something like HTTP because there

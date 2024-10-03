@@ -12,6 +12,7 @@ A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) A
   - [Introduction](#introduction)
   - [Goals](#goals)
   - [Portability criteria](#portability-criteria)
+  - [Dev notes](#dev-notes)
 
 ## Current Phase
 
@@ -28,7 +29,7 @@ A proposed [WebAssembly System Interface](https://github.com/WebAssembly/WASI) A
 ## Phase 4 Advancement Criteria
 
 `wasi-messaging` should have at least two implementations for both open source message brokers (such
-as Kafka, NATS, or Redis) and two for cloud service providers
+as Kafka, or NATS) and two for cloud service providers
 
 ## Introduction
 
@@ -69,11 +70,21 @@ send a message from all major messaging systems. This includes anything implemen
 standards like MQTT and AMQP, specific technologies like NATS and Kafka, and cloud provider
 implementations like Azure Service Bus and AWS SQS. This _does not_ mean it implements the full set
 of features of each of the messaging systems. In fact, it is expected that most implementations will
-need to do work to adapt their system to this interface (i.e. in Kafka, you'd have to mark the
+need to do work to adapt their system to this interface (i.e., in Kafka, you'd have to mark the
 message as completed once the call to `handle` returns). As mentioned above, this should still be
 completely compatible with any more advanced use cases of the various message systems. For example,
 if you have a queue of work that is currently being handled by a pre-existing piece of software
 outside of Wasm components, a component could use this interface to publish messages that get
 ingested into this queue. Another way to state the portability criteria is that this implementation
-should not break the possibilty of a component consuming this interface to be integrated in with a
+should not break the possibility of a component consuming this interface to be integrated in with a
 more advanced messaging use case
+
+## Dev notes
+
+To regenerate the `.md` files, run: 
+```sh
+wit-bindgen markdown ./wit/ -w imports --html-in-md
+wit-bindgen markdown ./wit/ -w imports-request-reply --html-in-md
+wit-bindgen markdown ./wit/ -w messaging-core --html-in-md
+wit-bindgen markdown ./wit/ -w messaging-request-reply --html-in-md
+```

@@ -2,6 +2,7 @@ interface types {
     /// A connection to a message-exchange service (e.g., buffer, broker, etc.).
     resource client {
         connect: static func(name: string) -> result<client, error>;
+        disconnect: func() -> result<_, error>;
     }
     
     /// Errors that can occur when using the messaging interface.
@@ -10,6 +11,8 @@ interface types {
         timeout,
         /// An error occurred with the connection. Includes a message for additional context
         connection(string),
+        /// A permission error occurred. Includes a message for additional context
+        permission-denied(string),
         /// A catch all for other types of errors
         other(string),
     }

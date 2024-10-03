@@ -14,4 +14,4 @@ jobs:
     - uses: WebAssembly/wit-abi-up-to-date@v17
       with:
         wit-bindgen: '0.18.0'
-        worlds: 'imports messaging'
+        worlds: 'imports imports-request-reply messaging-core messaging-request-reply'
