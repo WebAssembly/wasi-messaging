@@ -1,4 +1,10 @@
 interface types {
+    /// A type alias for list<tuple<string, string>> to represent metadata attached to a message
+    type metadata = list<tuple<string, string>>;
+
+    /// A type alias for string to represent a message topic
+    type topic = string;
+
     /// A connection to a message-exchange service (e.g., buffer, broker, etc.).
     resource client {
         connect: static func(name: string) -> result<client, error>;
@@ -21,9 +27,9 @@ interface types {
     resource message {
         constructor(topic: string, data: list<u8>);
         /// The topic/subject/channel this message was received or should be sent on
-        topic: func() -> string;
+        topic: func() -> topic;
         /// Set the topic/subject/channel this message should be sent on
-        set-topic: func(topic: string);
+        set-topic: func(topic: topic);
         /// An optional content-type describing the format of the data in the message. This is 
         /// sometimes described as the "format" type
         content-type: func() -> option<string>;
@@ -36,8 +42,10 @@ interface types {
         set-data: func(data: list<u8>);
         /// Optional metadata (also called headers or attributes in some systems) attached to the
         /// message
-        metadata: func() -> option<list<tuple<string, string>>>;
+        metadata: func() -> option<metadata>;
         /// Add a new key-value pair to the metadata, overwriting any existing value for the same key
         add-metadata: func(key: string, value: string);
+        /// Remove a key-value pair from the metadata
+        remove-metadata: func(key: string);
     }
 }

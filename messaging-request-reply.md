@@ -1,4 +1,7 @@
 <h1><a id="messaging_request_reply"></a>World messaging-request-reply</h1>
+<p>The <a href="#messaging_request_reply"><code>messaging-request-reply</code></a> world combines <code>imports-request-reply</code> with the <code>incoming-handler</code>
+export. This setup allows the host to interact with the component for both sending messages and
+handling incoming messages with request/reply capabilities.</p>
 <ul>
 <li>Imports:
 <ul>
@@ -16,6 +19,12 @@
 <h2><a id="wasi_messaging_types_0_2_0_draft"></a>Import interface wasi:messaging/types@0.2.0-draft</h2>
 <hr />
 <h3>Types</h3>
+<h4><a id="metadata"></a><code>type metadata</code></h4>
+<p><a href="#metadata"><a href="#metadata"><code>metadata</code></a></a></p>
+<p>A type alias for list<tuple<string, string>> to represent metadata attached to a message
+<h4><a id="topic"></a><code>type topic</code></h4>
+<p><code>string</code></p>
+<p>A type alias for string to represent a message topic
 <h4><a id="client"></a><code>resource client</code></h4>
 <p>A connection to a message-exchange service (e.g., buffer, broker, etc.).</p>
 <h4><a id="error"></a><code>variant error</code></h4>
@@ -63,7 +72,7 @@
 <h4><a id="constructor_message"></a><code>[constructor]message: func</code></h4>
 <h5>Params</h5>
 <ul>
-<li><a id="constructor_message.topic"></a><code>topic</code>: <code>string</code></li>
+<li><a id="constructor_message.topic"></a><a href="#topic"><code>topic</code></a>: <code>string</code></li>
 <li><a id="constructor_message.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
@@ -78,14 +87,14 @@
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a id="method_message_topic.0"></a> <code>string</code></li>
+<li><a id="method_message_topic.0"></a> <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
 </ul>
 <h4><a id="method_message_set_topic"></a><code>[method]message.set-topic: func</code></h4>
 <p>Set the topic/subject/channel this message should be sent on</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_set_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a id="method_message_set_topic.topic"></a><code>topic</code>: <code>string</code></li>
+<li><a id="method_message_set_topic.topic"></a><a href="#topic"><code>topic</code></a>: <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
 </ul>
 <h4><a id="method_message_content_type"></a><code>[method]message.content-type: func</code></h4>
 <p>An optional content-type describing the format of the data in the message. This is
@@ -132,7 +141,7 @@ message</p>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a id="method_message_metadata.0"></a> option&lt;list&lt;(<code>string</code>, <code>string</code>)&gt;&gt;</li>
+<li><a id="method_message_metadata.0"></a> option&lt;<a href="#metadata"><a href="#metadata"><code>metadata</code></a></a>&gt;</li>
 </ul>
 <h4><a id="method_message_add_metadata"></a><code>[method]message.add-metadata: func</code></h4>
 <p>Add a new key-value pair to the metadata, overwriting any existing value for the same key</p>
@@ -141,6 +150,13 @@ message</p>
 <li><a id="method_message_add_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 <li><a id="method_message_add_metadata.key"></a><code>key</code>: <code>string</code></li>
 <li><a id="method_message_add_metadata.value"></a><code>value</code>: <code>string</code></li>
+</ul>
+<h4><a id="method_message_remove_metadata"></a><code>[method]message.remove-metadata: func</code></h4>
+<p>Remove a key-value pair from the metadata</p>
+<h5>Params</h5>
+<ul>
+<li><a id="method_message_remove_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="method_message_remove_metadata.key"></a><code>key</code>: <code>string</code></li>
 </ul>
 <h2><a id="wasi_messaging_request_reply_0_2_0_draft"></a>Import interface wasi:messaging/request-reply@0.2.0-draft</h2>
 <p>The request-reply interface allows a guest to send a message and await a response. This
@@ -198,8 +214,8 @@ return the list of messages received up to that point.</p>
 <h5>Params</h5>
 <ul>
 <li><a id="request.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
-<li><a id="request.msg"></a><code>msg</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a id="request.opts"></a><code>opts</code>: option&lt;own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;&gt;</li>
+<li><a id="request.message"></a><a href="#message"><code>message</code></a>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="request.options"></a><code>options</code>: option&lt;own&lt;<a href="#request_options"><a href="#request_options"><code>request-options</code></a></a>&gt;&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
@@ -218,7 +234,7 @@ where the reply is sent and the connection is closed.</p>
 <h5>Params</h5>
 <ul>
 <li><a id="reply.reply_to"></a><code>reply-to</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a id="reply.reply"></a><a href="#reply"><code>reply</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="reply.message"></a><a href="#message"><code>message</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
@@ -244,7 +260,7 @@ where the reply is sent and the connection is closed.</p>
 <h5>Params</h5>
 <ul>
 <li><a id="send.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
-<li><a id="send.m"></a><code>m</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="send.message"></a><a href="#message"><code>message</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
@@ -259,6 +275,9 @@ where the reply is sent and the connection is closed.</p>
 #### <a id="error"></a>`type error`
 [`error`](#error)
 <p>
+#### <a id="topic"></a>`type topic`
+[`topic`](#topic)
+<p>
 ----
 <h3>Functions</h3>
 <h4><a id="handle"></a><code>handle: func</code></h4>
@@ -268,18 +287,18 @@ message accordingly. Implementors (such as hosts) calling this interface should 
 own decisions on how to handle errors returned from this function.</p>
 <h5>Params</h5>
 <ul>
-<li><a id="handle.ms"></a><code>ms</code>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="handle.message"></a><a href="#message"><code>message</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
 <li><a id="handle.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
-<h4><a id="get_subscriptions"></a><code>get-subscriptions: func</code></h4>
-<p>Subscribe to a list of topics (represented as <code>string</code>s) at runtime.
-Implementors should consider also allowing subscriptions to be made at compile time via
-some sort of configuration file. This function is intended to be called at the start of the
+<h4><a id="get_topics"></a><code>get-topics: func</code></h4>
+<p>Returns a list of topics (represented as <code>string</code>s) at runtime the guest should be subscribed
+to at runtime. Implementors should consider also allowing subscriptions to be made at compile time
+via some sort of configuration file. This function is intended to be called at the start of the
 guest's lifecycle before any messages are sent.</p>
 <h5>Return values</h5>
 <ul>
-<li><a id="get_subscriptions.0"></a> result&lt;list&lt;<code>string</code>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+<li><a id="get_topics.0"></a> result&lt;list&lt;<a href="#topic"><a href="#topic"><code>topic</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>

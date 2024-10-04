@@ -31,7 +31,7 @@ interface request-reply {
     /// error, (2) if the maximum expected number of replies were received before timeout, return
     /// the list of messages, or (3) if the timeout is reached before the expected number of replies,
     /// return the list of messages received up to that point.
-    request: func(c: borrow<client>, msg: borrow<message>, opts: option<request-options>) -> result<list<message>, error>;
+    request: func(c: borrow<client>, message: borrow<message>, options: option<request-options>) -> result<list<message>, error>;
 
     /// Replies to the given message with the given response message. The details of which channel 
     /// the message is sent to is up to the implementation. This allows for reply-to details to be
@@ -43,5 +43,5 @@ interface request-reply {
     /// Additionally, you might want to reply to a message several times (such as providing an
     /// update). So this function is allowed to be called multiple times, unlike something like HTTP
     /// where the reply is sent and the connection is closed.
-    reply: func(reply-to: borrow<message>, reply: message) -> result<_, error>;
+    reply: func(reply-to: borrow<message>, message: message) -> result<_, error>;
 }
