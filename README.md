@@ -88,3 +88,6 @@ wit-bindgen markdown ./wit/ -w imports-request-reply --html-in-md
 wit-bindgen markdown ./wit/ -w messaging-core --html-in-md
 wit-bindgen markdown ./wit/ -w messaging-request-reply --html-in-md
 ```
+
+It would make sense for a lot of these functions to be async, but that is not currently natively supported in
+the component model. Async support will be added as part of WASI Preview 3.
