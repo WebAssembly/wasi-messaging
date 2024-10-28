@@ -13,5 +13,5 @@ jobs:
     - uses: actions/checkout@v2
     - uses: WebAssembly/wit-abi-up-to-date@v17
       with:
-        wit-bindgen: '0.30.0'
+        wit-bindgen: '0.34.0'
         worlds: 'imports imports-request-reply messaging-core messaging-request-reply'

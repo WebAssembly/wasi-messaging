@@ -2,13 +2,13 @@ interface incoming-handler {
     use types.{message, error, topic};
 
     /// Whenever this guest receives a message in one of the subscribed topics, the message is
-    /// sent to this handler. The guest is responsible for matching on the channel and handling the
+    /// sent to this handler. The guest is responsible for matching on the topic and handling the
     /// message accordingly. Implementors (such as hosts) calling this interface should make their
     /// own decisions on how to handle errors returned from this function.
     handle: func(message: message) -> result<_, error>;
 
     // Returns a list of topics (represented as `string`s) at runtime the guest should be subscribed
-    // to at runtime. Implementors should consider also allowing subscriptions to be made at compile time
+    // Implementors should consider also allowing subscriptions to be made at compile time
     // via some sort of configuration file. This function is intended to be called at the start of the
     // guest's lifecycle before any messages are sent.
     get-topics: func() -> result<list<topic>, error>;

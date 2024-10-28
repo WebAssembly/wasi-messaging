@@ -33,7 +33,7 @@ interface request-reply {
     /// return the list of messages received up to that point.
     request: func(c: borrow<client>, message: borrow<message>, options: option<request-options>) -> result<list<message>, error>;
 
-    /// Replies to the given message with the given response message. The details of which channel 
+    /// Replies to the given message with the given response message. The details of which topic
     /// the message is sent to is up to the implementation. This allows for reply-to details to be
     /// handled in the best way possible for the underlying messaging system.
     /// 

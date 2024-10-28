@@ -101,4 +101,4 @@ It would make sense for a lot of these functions to be asynchronous, but that is
 the component model. Asynchronous support will be added as part of WASI Preview 3. When async support becomes 
 available, we plan to update the wasi-messaging interface to incorporate asynchronous patterns.
 
-> **Note**: Ensure you have version 0.30.0 of `wit-bindgen` installed to avoid compatibility issues.
+> **Note**: Ensure you have version 0.34.0 of `wit-bindgen` installed to avoid compatibility issues.

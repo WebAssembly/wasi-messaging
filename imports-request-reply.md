@@ -66,7 +66,6 @@ This allows the component to perform request/reply messaging patterns.</p>
 <h4><a id="constructor_message"></a><code>[constructor]message: func</code></h4>
 <h5>Params</h5>
 <ul>
-<li><a id="constructor_message.topic"></a><a href="#topic"><code>topic</code></a>: <code>string</code></li>
 <li><a id="constructor_message.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
@@ -82,13 +81,6 @@ This allows the component to perform request/reply messaging patterns.</p>
 <h5>Return values</h5>
 <ul>
 <li><a id="method_message_topic.0"></a> <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
-</ul>
-<h4><a id="method_message_set_topic"></a><code>[method]message.set-topic: func</code></h4>
-<p>Set the topic/subject/channel this message should be sent on</p>
-<h5>Params</h5>
-<ul>
-<li><a id="method_message_set_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a id="method_message_set_topic.topic"></a><a href="#topic"><code>topic</code></a>: <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
 </ul>
 <h4><a id="method_message_content_type"></a><code>[method]message.content-type: func</code></h4>
 <p>An optional content-type describing the format of the data in the message. This is
@@ -144,6 +136,13 @@ message</p>
 <li><a id="method_message_add_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 <li><a id="method_message_add_metadata.key"></a><code>key</code>: <code>string</code></li>
 <li><a id="method_message_add_metadata.value"></a><code>value</code>: <code>string</code></li>
+</ul>
+<h4><a id="method_message_set_metadata"></a><code>[method]message.set-metadata: func</code></h4>
+<p>Set the metadata</p>
+<h5>Params</h5>
+<ul>
+<li><a id="method_message_set_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="method_message_set_metadata.meta"></a><code>meta</code>: <a href="#metadata"><a href="#metadata"><code>metadata</code></a></a></li>
 </ul>
 <h4><a id="method_message_remove_metadata"></a><code>[method]message.remove-metadata: func</code></h4>
 <p>Remove a key-value pair from the metadata</p>
@@ -216,7 +215,7 @@ return the list of messages received up to that point.</p>
 <li><a id="request.0"></a> result&lt;list&lt;own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
 <h4><a id="reply"></a><code>reply: func</code></h4>
-<p>Replies to the given message with the given response message. The details of which channel
+<p>Replies to the given message with the given response message. The details of which topic
 the message is sent to is up to the implementation. This allows for reply-to details to be
 handled in the best way possible for the underlying messaging system.</p>
 <p>Please note that this reply functionality is different than something like HTTP because there
@@ -247,6 +246,9 @@ where the reply is sent and the connection is closed.</p>
 #### <a id="error"></a>`type error`
 [`error`](#error)
 <p>
+#### <a id="topic"></a>`type topic`
+[`topic`](#topic)
+<p>
 ----
 <h3>Functions</h3>
 <h4><a id="send"></a><code>send: func</code></h4>
@@ -255,6 +257,7 @@ where the reply is sent and the connection is closed.</p>
 <ul>
 <li><a id="send.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
 <li><a id="send.message"></a><a href="#message"><code>message</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="send.topic"></a><a href="#topic"><code>topic</code></a>: <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
 </ul>
 <h5>Return values</h5>
 <ul>

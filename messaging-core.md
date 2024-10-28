@@ -70,7 +70,6 @@ enabling the component to handle incoming messages without request/reply capabil
 <h4><a id="constructor_message"></a><code>[constructor]message: func</code></h4>
 <h5>Params</h5>
 <ul>
-<li><a id="constructor_message.topic"></a><a href="#topic"><code>topic</code></a>: <code>string</code></li>
 <li><a id="constructor_message.data"></a><code>data</code>: list&lt;<code>u8</code>&gt;</li>
 </ul>
 <h5>Return values</h5>
@@ -86,13 +85,6 @@ enabling the component to handle incoming messages without request/reply capabil
 <h5>Return values</h5>
 <ul>
 <li><a id="method_message_topic.0"></a> <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
-</ul>
-<h4><a id="method_message_set_topic"></a><code>[method]message.set-topic: func</code></h4>
-<p>Set the topic/subject/channel this message should be sent on</p>
-<h5>Params</h5>
-<ul>
-<li><a id="method_message_set_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
-<li><a id="method_message_set_topic.topic"></a><a href="#topic"><code>topic</code></a>: <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
 </ul>
 <h4><a id="method_message_content_type"></a><code>[method]message.content-type: func</code></h4>
 <p>An optional content-type describing the format of the data in the message. This is
@@ -149,6 +141,13 @@ message</p>
 <li><a id="method_message_add_metadata.key"></a><code>key</code>: <code>string</code></li>
 <li><a id="method_message_add_metadata.value"></a><code>value</code>: <code>string</code></li>
 </ul>
+<h4><a id="method_message_set_metadata"></a><code>[method]message.set-metadata: func</code></h4>
+<p>Set the metadata</p>
+<h5>Params</h5>
+<ul>
+<li><a id="method_message_set_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="method_message_set_metadata.meta"></a><code>meta</code>: <a href="#metadata"><a href="#metadata"><code>metadata</code></a></a></li>
+</ul>
 <h4><a id="method_message_remove_metadata"></a><code>[method]message.remove-metadata: func</code></h4>
 <p>Remove a key-value pair from the metadata</p>
 <h5>Params</h5>
@@ -169,6 +168,9 @@ message</p>
 #### <a id="error"></a>`type error`
 [`error`](#error)
 <p>
+#### <a id="topic"></a>`type topic`
+[`topic`](#topic)
+<p>
 ----
 <h3>Functions</h3>
 <h4><a id="send"></a><code>send: func</code></h4>
@@ -177,6 +179,7 @@ message</p>
 <ul>
 <li><a id="send.c"></a><code>c</code>: borrow&lt;<a href="#client"><a href="#client"><code>client</code></a></a>&gt;</li>
 <li><a id="send.message"></a><a href="#message"><code>message</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+<li><a id="send.topic"></a><a href="#topic"><code>topic</code></a>: <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
 </ul>
 <h5>Return values</h5>
 <ul>
@@ -198,7 +201,7 @@ message</p>
 <h3>Functions</h3>
 <h4><a id="handle"></a><code>handle: func</code></h4>
 <p>Whenever this guest receives a message in one of the subscribed topics, the message is
-sent to this handler. The guest is responsible for matching on the channel and handling the
+sent to this handler. The guest is responsible for matching on the topic and handling the
 message accordingly. Implementors (such as hosts) calling this interface should make their
 own decisions on how to handle errors returned from this function.</p>
 <h5>Params</h5>
@@ -211,7 +214,7 @@ own decisions on how to handle errors returned from this function.</p>
 </ul>
 <h4><a id="get_topics"></a><code>get-topics: func</code></h4>
 <p>Returns a list of topics (represented as <code>string</code>s) at runtime the guest should be subscribed
-to at runtime. Implementors should consider also allowing subscriptions to be made at compile time
+Implementors should consider also allowing subscriptions to be made at compile time
 via some sort of configuration file. This function is intended to be called at the start of the
 guest's lifecycle before any messages are sent.</p>
 <h5>Return values</h5>
