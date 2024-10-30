@@ -1,11 +1,16 @@
-<h1><a id="imports"></a>World imports</h1>
-<p>The <a href="#imports"><code>imports</code></a> world defines the interfaces that the component will import from the host.
-It includes the <code>producer</code> interface for sending messages.</p>
+<h1><a id="messaging_core"></a>World messaging-core</h1>
+<p>The <a href="#messaging_core"><code>messaging-core</code></a> world includes the basic <code>imports</code> and exports the <code>incoming-handler</code>,
+enabling the component to handle incoming messages without request/reply capabilities.</p>
 <ul>
 <li>Imports:
 <ul>
 <li>interface <a href="#wasi_messaging_types_0_2_0_draft"><code>wasi:messaging/types@0.2.0-draft</code></a></li>
 <li>interface <a href="#wasi_messaging_producer_0_2_0_draft"><code>wasi:messaging/producer@0.2.0-draft</code></a></li>
+</ul>
+</li>
+<li>Exports:
+<ul>
+<li>interface <a href="#wasi_messaging_incoming_handler_0_2_0_draft"><code>wasi:messaging/incoming-handler@0.2.0-draft</code></a></li>
 </ul>
 </li>
 </ul>
@@ -179,4 +184,40 @@ message</p>
 <h5>Return values</h5>
 <ul>
 <li><a id="send.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+</ul>
+<h2><a id="wasi_messaging_incoming_handler_0_2_0_draft"></a>Export interface wasi:messaging/incoming-handler@0.2.0-draft</h2>
+<hr />
+<h3>Types</h3>
+<h4><a id="message"></a><code>type message</code></h4>
+<p><a href="#message"><a href="#message"><code>message</code></a></a></p>
+<p>
+#### <a id="error"></a>`type error`
+[`error`](#error)
+<p>
+#### <a id="topic"></a>`type topic`
+[`topic`](#topic)
+<p>
+----
+<h3>Functions</h3>
+<h4><a id="handle"></a><code>handle: func</code></h4>
+<p>Whenever this guest receives a message in one of the subscribed topics, the message is
+sent to this handler. The guest is responsible for matching on the topic and handling the
+message accordingly. Implementors (such as hosts) calling this interface should make their
+own decisions on how to handle errors returned from this function.</p>
+<h5>Params</h5>
+<ul>
+<li><a id="handle.message"></a><a href="#message"><code>message</code></a>: own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a id="handle.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
+</ul>
+<h4><a id="get_topics"></a><code>get-topics: func</code></h4>
+<p>Returns a list of topics (represented as <code>string</code>s) at runtime the guest should be subscribed
+Implementors should consider also allowing subscriptions to be made at compile time
+via some sort of configuration file. This function is intended to be called at the start of the
+guest's lifecycle before any messages are sent.</p>
+<h5>Return values</h5>
+<ul>
+<li><a id="get_topics.0"></a> result&lt;list&lt;<a href="#topic"><a href="#topic"><code>topic</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>
