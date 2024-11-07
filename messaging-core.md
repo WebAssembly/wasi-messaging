@@ -77,7 +77,7 @@ enabling the component to handle incoming messages without request/reply capabil
 <li><a id="constructor_message.0"></a> own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h4><a id="method_message_topic"></a><code>[method]message.topic: func</code></h4>
-<p>The topic/subject/channel this message was received or should be sent on</p>
+<p>The topic/subject/channel this message was received on</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
@@ -124,7 +124,8 @@ sometimes described as the &quot;format&quot; type</p>
 </ul>
 <h4><a id="method_message_metadata"></a><code>[method]message.metadata: func</code></h4>
 <p>Optional metadata (also called headers or attributes in some systems) attached to the
-message</p>
+message. This metadata is simply decoration and should not be interpreted by a host
+to ensure portability across different implementors (e.g., Kafka -&gt; NATS, etc.).</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
@@ -211,13 +212,4 @@ own decisions on how to handle errors returned from this function.</p>
 <h5>Return values</h5>
 <ul>
 <li><a id="handle.0"></a> result&lt;_, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
-</ul>
-<h4><a id="get_topics"></a><code>get-topics: func</code></h4>
-<p>Returns a list of topics (represented as <code>string</code>s) at runtime the guest should be subscribed
-Implementors should consider also allowing subscriptions to be made at compile time
-via some sort of configuration file. This function is intended to be called at the start of the
-guest's lifecycle before any messages are sent.</p>
-<h5>Return values</h5>
-<ul>
-<li><a id="get_topics.0"></a> result&lt;list&lt;<a href="#topic"><a href="#topic"><code>topic</code></a></a>&gt;, <a href="#error"><a href="#error"><code>error</code></a></a>&gt;</li>
 </ul>

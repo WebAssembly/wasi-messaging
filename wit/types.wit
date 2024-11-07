@@ -26,7 +26,7 @@ interface types {
     /// A message with a binary payload and additional information
     resource message {
         constructor(data: list<u8>);
-        /// The topic/subject/channel this message was received or should be sent on
+        /// The topic/subject/channel this message was received on
         topic: func() -> topic;
         /// An optional content-type describing the format of the data in the message. This is 
         /// sometimes described as the "format" type
@@ -39,7 +39,8 @@ interface types {
         /// Set the opaque blob of data for this message, discarding the old value
         set-data: func(data: list<u8>);
         /// Optional metadata (also called headers or attributes in some systems) attached to the
-        /// message
+        /// message. This metadata is simply decoration and should not be interpreted by a host
+        /// to ensure portability across different implementors (e.g., Kafka -> NATS, etc.).
         metadata: func() -> option<metadata>;
         /// Add a new key-value pair to the metadata, overwriting any existing value for the same key
         add-metadata: func(key: string, value: string);
