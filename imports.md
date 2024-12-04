@@ -72,14 +72,14 @@ It includes the <code>producer</code> interface for sending messages.</p>
 <li><a id="constructor_message.0"></a> own&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h4><a id="method_message_topic"></a><code>[method]message.topic: func</code></h4>
-<p>The topic/subject/channel this message was received on</p>
+<p>The topic/subject/channel this message was received on, if any</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_topic.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 </ul>
 <h5>Return values</h5>
 <ul>
-<li><a id="method_message_topic.0"></a> <a href="#topic"><a href="#topic"><code>topic</code></a></a></li>
+<li><a id="method_message_topic.0"></a> option&lt;<a href="#topic"><a href="#topic"><code>topic</code></a></a>&gt;</li>
 </ul>
 <h4><a id="method_message_content_type"></a><code>[method]message.content-type: func</code></h4>
 <p>An optional content-type describing the format of the data in the message. This is
