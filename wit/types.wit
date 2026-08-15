@@ -22,6 +22,15 @@ interface types {
         /// A catch all for other types of errors
         other(string),
     }
+
+    /// Errors that can occur when adding metadata to a message
+    variant metadata-error {
+        /// Metadata is not supported by the message type
+        not-supported,
+
+        /// Metadata is not valid for message type with optional reason
+        invalid(option<string>)
+    }
   
     /// A message with a binary payload and additional information
     resource message {
@@ -32,8 +41,9 @@ interface types {
         /// sometimes described as the "format" type
         content-type: func() -> option<string>;
         /// Set the content-type describing the format of the data in the message. This is
-        /// sometimes described as the "format" type
-        set-content-type: func(content-type: string);
+        /// sometimes described as the "format" type.
+        /// Error is returned if content-type is not supported by the message type.
+        set-content-type: func(content-type: string) -> result;
         /// An opaque blob of data
         data: func() -> list<u8>;
         /// Set the opaque blob of data for this message, discarding the old value
@@ -42,10 +52,12 @@ interface types {
         /// message. This metadata is simply decoration and should not be interpreted by a host
         /// to ensure portability across different implementors (e.g., Kafka -> NATS, etc.).
         metadata: func() -> option<metadata>;
-        /// Add a new key-value pair to the metadata, overwriting any existing value for the same key
-        add-metadata: func(key: string, value: string);
-        /// Set the metadata
-        set-metadata: func(meta: metadata);
+        /// Add a new key-value pair to the metadata, overwriting any existing value for the same key.
+        /// Error is returned if metadata is either not supported by the concrete message type or value is not valid.
+        add-metadata: func(key: string, value: string) -> result<_, metadata-error>;
+        /// Set the metadata.
+        /// Error is returned if metadata is either not supported by the concrete message type or value is not valid.
+        set-metadata: func(meta: metadata) -> result<_, metadata-error>;
         /// Remove a key-value pair from the metadata
         remove-metadata: func(key: string);
     }

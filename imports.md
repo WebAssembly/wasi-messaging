@@ -41,6 +41,19 @@ It includes the <code>producer</code> interface for sending messages.</p>
 <p>A catch all for other types of errors
 </li>
 </ul>
+<h4><a id="metadata_error"></a><code>variant metadata-error</code></h4>
+<p>Errors that can occur when adding metadata to a message</p>
+<h5>Variant Cases</h5>
+<ul>
+<li>
+<p><a id="metadata_error.not_supported"></a><code>not-supported</code></p>
+<p>Metadata is not supported by the message type
+</li>
+<li>
+<p><a id="metadata_error.invalid"></a><code>invalid</code>: option&lt;<code>string</code>&gt;</p>
+<p>Metadata is not valid for message type with optional reason
+</li>
+</ul>
 <h4><a id="message"></a><code>resource message</code></h4>
 <h2>A message with a binary payload and additional information</h2>
 <h3>Functions</h3>
@@ -94,11 +107,16 @@ sometimes described as the &quot;format&quot; type</p>
 </ul>
 <h4><a id="method_message_set_content_type"></a><code>[method]message.set-content-type: func</code></h4>
 <p>Set the content-type describing the format of the data in the message. This is
-sometimes described as the &quot;format&quot; type</p>
+sometimes described as the &quot;format&quot; type.
+Error is returned if content-type is not supported by the message type.</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_set_content_type.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 <li><a id="method_message_set_content_type.content_type"></a><code>content-type</code>: <code>string</code></li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a id="method_message_set_content_type.0"></a> result</li>
 </ul>
 <h4><a id="method_message_data"></a><code>[method]message.data: func</code></h4>
 <p>An opaque blob of data</p>
@@ -130,19 +148,29 @@ to ensure portability across different implementors (e.g., Kafka -&gt; NATS, etc
 <li><a id="method_message_metadata.0"></a> option&lt;<a href="#metadata"><a href="#metadata"><code>metadata</code></a></a>&gt;</li>
 </ul>
 <h4><a id="method_message_add_metadata"></a><code>[method]message.add-metadata: func</code></h4>
-<p>Add a new key-value pair to the metadata, overwriting any existing value for the same key</p>
+<p>Add a new key-value pair to the metadata, overwriting any existing value for the same key.
+Error is returned if metadata is either not supported by the concrete message type or value is not valid.</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_add_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 <li><a id="method_message_add_metadata.key"></a><code>key</code>: <code>string</code></li>
 <li><a id="method_message_add_metadata.value"></a><code>value</code>: <code>string</code></li>
 </ul>
+<h5>Return values</h5>
+<ul>
+<li><a id="method_message_add_metadata.0"></a> result&lt;_, <a href="#metadata_error"><a href="#metadata_error"><code>metadata-error</code></a></a>&gt;</li>
+</ul>
 <h4><a id="method_message_set_metadata"></a><code>[method]message.set-metadata: func</code></h4>
-<p>Set the metadata</p>
+<p>Set the metadata.
+Error is returned if metadata is either not supported by the concrete message type or value is not valid.</p>
 <h5>Params</h5>
 <ul>
 <li><a id="method_message_set_metadata.self"></a><code>self</code>: borrow&lt;<a href="#message"><a href="#message"><code>message</code></a></a>&gt;</li>
 <li><a id="method_message_set_metadata.meta"></a><code>meta</code>: <a href="#metadata"><a href="#metadata"><code>metadata</code></a></a></li>
+</ul>
+<h5>Return values</h5>
+<ul>
+<li><a id="method_message_set_metadata.0"></a> result&lt;_, <a href="#metadata_error"><a href="#metadata_error"><code>metadata-error</code></a></a>&gt;</li>
 </ul>
 <h4><a id="method_message_remove_metadata"></a><code>[method]message.remove-metadata: func</code></h4>
 <p>Remove a key-value pair from the metadata</p>
